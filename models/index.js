@@ -8,7 +8,7 @@ const sequelize = new Sequelize('slack', 'daniel', '', {
 });
 
 const models = {
-  User: sequelize.import('./user'),
+  User: sequelize.import('./user.js'),
   Channel: sequelize.import('./channel'),
   Message: sequelize.import('./message'),
   Team: sequelize.import('./team'),
