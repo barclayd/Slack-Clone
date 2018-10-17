@@ -1,39 +1,31 @@
+import path from 'path';
+import { fileLoader, mergeTypes, mergeResolvers } from 'merge-graphql-schemas';
 import models from './models';
+
+const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './schema')));
+
+const resolvers = mergeResolvers(fileLoader(path.join(__dirname, './resolvers')));
 
 const express = require('express');
 const {
-    ApolloServer,
-    gql,
+  ApolloServer,
+  gql,
 } = require('apollo-server-express');
-
-const PORT = 4000;
 
 const app = express();
 
-const typeDefs = gql `
-  type Query {
-    hello: String
-  }
-`;
-
-const resolvers = {
-    Query: {
-        hello: () => 'Hello world!',
-    },
-};
-
 const server = new ApolloServer({
-    typeDefs,
-    resolvers,
+  typeDefs,
+  resolvers,
 });
 server.applyMiddleware({
-    app,
+  app,
 });
 
 models.sequelize.sync({
-    force: true
+  force: true,
 }).then(() => {
-    app.listen({
-        port: PORT,
-    }, () => console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`));
+  app.listen({
+    port: PORT,
+  }, () => console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`));
 });
