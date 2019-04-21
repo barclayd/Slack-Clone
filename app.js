@@ -10,6 +10,9 @@ const server = new ApolloServer({
   resolvers,
   context: {
     models,
+    user: {
+      id: 1,
+    },
   },
 });
 
