@@ -9,6 +9,8 @@ export default (sequelize, DataTypes) => {
       unique: true,
     },
     password: DataTypes.STRING,
+  }, {
+    underscored: true,
   });
 
   User.associate = (models) => {
@@ -19,7 +21,7 @@ export default (sequelize, DataTypes) => {
         field: 'user_id',
       },
     });
-    // n:M
+    // 1:M
     User.belongsToMany(models.Channel, {
       through: 'channel_member',
       foreignKey: {
