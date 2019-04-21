@@ -3,8 +3,6 @@ export default (sequelize, DataTypes) => {
     'channel', {
       name: DataTypes.STRING,
       public: DataTypes.BOOLEAN,
-    }, {
-      underscored: true,
     },
   );
 
