@@ -5,4 +5,9 @@ export default `
     channel: Channel!
     user: User!
   }
+  
+   type Mutation {
+    createMessage(channelId: Int!, text: String!): Boolean!
+  }
+  
 `;
