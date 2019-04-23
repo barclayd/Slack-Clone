@@ -1,7 +1,5 @@
 export default {
-  Query: {
-
-  },
+  Query: {},
   Mutation: {
     createTeam: async (parent, args, { models, user }) => {
       try {

@@ -1,7 +1,5 @@
 export default {
-  Query: {
-
-  },
+  Query: {},
   Mutation: {
     createChannel: async (parent, args, { models }) => {
       try {

@@ -1,9 +1,11 @@
 module.exports = {
-    "extends": "airbnb",
-    "rules": {
-        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
-    },
-    "globals": {
-        "document": 1
-    }
+  extends: ['airbnb'],
+  parser: 'babel-eslint',
+  rules: {
+    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
+    'react/prop-types': 0,
+  },
+  globals: {
+    document: 1,
+  },
 };
