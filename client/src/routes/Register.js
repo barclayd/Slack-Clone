@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
-// prettier-ignore
 import {
-  Container, Header, Form, Segment, Button,
+  Container,
+  Header,
+  Form,
+  Segment,
+  Button,
+  Message,
 } from 'semantic-ui-react';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
@@ -9,8 +13,11 @@ import gql from 'graphql-tag';
 class Register extends Component {
   state = {
     username: '',
+    usernameError: '',
     email: '',
+    emailError: '',
     password: '',
+    passwordError: '',
     terms: false,
   };
 
@@ -29,8 +36,13 @@ class Register extends Component {
   };
 
   onSubmit = async () => {
+    this.setState({
+      usernameError: '',
+      emailError: '',
+      passwordError: '',
+    });
     const { username, email, password } = this.state;
-    const { mutate } = this.props;
+    const { mutate, history } = this.props;
     const response = await mutate({
       variables: {
         username,
@@ -38,13 +50,29 @@ class Register extends Component {
         password,
       },
     });
-    console.log(response);
+
+    const { ok, errors } = response.data.register;
+
+    if (ok) {
+      history.push('/');
+    } else {
+      const validationErrors = {};
+      errors.forEach(({ path, message }) => {
+        validationErrors[`${path}Error`] = message;
+      });
+      this.setState(validationErrors);
+    }
   };
 
   render() {
-    // prettier-ignore
     const {
-      username, email, password, terms,
+      username,
+      email,
+      password,
+      terms,
+      usernameError,
+      emailError,
+      passwordError,
     } = this.state;
     const { onChange, onCheck, onSubmit } = this;
 
@@ -52,6 +80,15 @@ class Register extends Component {
       <Container text>
         <Header as="h2">Register</Header>
         <Segment inverted>
+          {(usernameError || emailError || passwordError) && (
+            <Message
+              error
+              header="There was some errors with creating your account"
+              list={[usernameError, emailError, passwordError].filter(
+                err => err,
+              )}
+            />
+          )}
           <Form inverted>
             <Form.Group widths="equal">
               <Form.Input
@@ -59,6 +96,7 @@ class Register extends Component {
                 icon="user"
                 iconPosition="left"
                 fluid
+                error={!!usernameError}
                 label="Username"
                 placeholder="Username"
                 value={username}
@@ -73,6 +111,7 @@ class Register extends Component {
                 type="email"
                 placeholder="Email"
                 value={email}
+                error={!!emailError}
                 onChange={onChange}
               />
             </Form.Group>
@@ -86,6 +125,7 @@ class Register extends Component {
                 type="password"
                 placeholder="Password"
                 value={password}
+                error={!!passwordError}
                 onChange={onChange}
               />
             </Form.Field>
@@ -105,18 +145,15 @@ class Register extends Component {
 }
 
 const registerMutation = gql`
-  mutation($username:String!, $email:String!, $password:String!, ) {
-  register (
-    username: $username
-    email: $email
-    password: $password) {
+  mutation($username: String!, $email: String!, $password: String!) {
+    register(username: $username, email: $email, password: $password) {
       ok
       errors {
         path
         message
       }
+    }
   }
-}
 `;
 
 export default graphql(registerMutation)(Register);
