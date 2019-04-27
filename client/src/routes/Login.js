@@ -1,9 +1,25 @@
 import React, { Component } from 'react';
 import { extendObservable } from 'mobx';
 import { observer } from 'mobx-react';
+import { ApolloConsumer } from 'react-apollo';
+import gql from 'graphql-tag';
 import {
   Button, Container, Form, Header, Segment,
 } from 'semantic-ui-react';
+
+const loginQuery = gql`
+  query($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      ok
+      token
+      refreshToken
+      errors {
+        path
+        message
+      }
+    }
+  }
+`;
 
 class Login extends Component {
   constructor(props) {
@@ -20,9 +36,24 @@ class Login extends Component {
     this[name] = value;
   };
 
-  onSubmit = () => {
+  onSubmit = async (client) => {
     const { email, password } = this;
-    console.log(email, password);
+    const { history } = this.props;
+
+    const { data } = await client.query({
+      query: loginQuery,
+      variables: { email, password },
+    });
+
+    const {
+      ok, token, refreshToken,
+    } = data.login;
+
+    if (ok) {
+      localStorage.setItem('token', token);
+      localStorage.setItem('refreshToken', refreshToken);
+      history.push('/');
+    }
   };
 
   render() {
@@ -61,9 +92,13 @@ class Login extends Component {
                 onChange={onChange}
               />
             </Form.Field>
-            <Button type="submit" onClick={onSubmit}>
-              Submit
-            </Button>
+            <ApolloConsumer>
+              {client => (
+                <Button type="submit" onClick={() => onSubmit(client)}>
+                  Submit
+                </Button>
+              )}
+            </ApolloConsumer>
           </Form>
         </Segment>
       </Container>
