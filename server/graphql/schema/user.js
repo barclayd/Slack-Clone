@@ -7,15 +7,23 @@ export default `
     teams: [Team!]!
   }
   
-  type Query {
-    getUser(id: ID!): User!
-    allUsers: [User!]!
+  type LoginResponse {
+    ok: Boolean!
+    token: String
+    refreshToken: String
+    errors: [Error!]
   }
   
   type RegisterResponse {
     ok: Boolean!
     user: User
     errors: [Error!]
+  }
+  
+  type Query {
+    getUser(id: ID!): User!
+    allUsers: [User!]!
+    login(email: String!, password: String!): LoginResponse!
   }
   
   type Mutation {
