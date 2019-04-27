@@ -1,10 +1,12 @@
 import bcrypt from 'bcrypt';
+import { tryLogin } from '../../auth/auth';
 import formatErrors from '../../helpers/formatErrors';
 
 export default {
   Query: {
     getUser: (parent, { id }, { models }) => models.User.findOne({ where: { id } }),
     allUsers: (parent, args, { models }) => models.User.findAll(),
+    login: (parent, { email, password }, { models, SECRET, SECRET2 }) => tryLogin(email, password, models, SECRET, SECRET2),
   },
   Mutation: {
     register: async (parent, { password, ...otherArgs }, { models }) => {
@@ -21,7 +23,10 @@ export default {
           };
         }
         const hashedPassword = await bcrypt.hash(password, 12);
-        const user = await models.User.create({ ...otherArgs, password: hashedPassword });
+        const user = await models.User.create({
+          ...otherArgs,
+          password: hashedPassword,
+        });
 
         return {
           ok: true,
