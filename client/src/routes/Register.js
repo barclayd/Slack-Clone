@@ -83,7 +83,7 @@ class Register extends Component {
           {(usernameError || emailError || passwordError) && (
             <Message
               error
-              header="There was some errors with creating your account"
+              header="There were some errors with creating your account"
               list={[usernameError, emailError, passwordError].filter(
                 err => err,
               )}

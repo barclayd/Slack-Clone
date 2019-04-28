@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt';
 import { tryLogin } from '../../auth/auth';
 import formatErrors from '../../helpers/formatErrors';
 
@@ -9,24 +8,9 @@ export default {
     login: (parent, { email, password }, { models, SECRET, SECRET2 }) => tryLogin(email, password, models, SECRET, SECRET2),
   },
   Mutation: {
-    register: async (parent, { password, ...otherArgs }, { models }) => {
+    register: async (parent, args, { models }) => {
       try {
-        if (password.length < 6) {
-          return {
-            ok: false,
-            errors: [
-              {
-                path: 'password',
-                message: 'Password must be at least 6 characters in length',
-              },
-            ],
-          };
-        }
-        const hashedPassword = await bcrypt.hash(password, 12);
-        const user = await models.User.create({
-          ...otherArgs,
-          password: hashedPassword,
-        });
+        const user = await models.User.create(args);
 
         return {
           ok: true,
