@@ -15,7 +15,7 @@ const server = new ApolloServer({
   context: {
     models,
     user: {
-      id: 1,
+      id: 17,
     },
     SECRET,
     SECRET2,
@@ -30,5 +30,5 @@ server.applyMiddleware({ app });
 models.sequelize.sync().then(() => {
   app.listen({ port: 4000 }, () => console.log(
     `🚀 Server ready at http://localhost:4000${server.graphqlPath}`,
-  )); // eslint-disable-line no-console
+  ));
 });
