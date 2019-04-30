@@ -12,6 +12,7 @@
     "apollo-link-http": "^1.5.14",
     "graphql": "^14.2.1",
     "graphql-tag": "^2.10.1",
+    "jwt-decode": "^2.2.0",
     "loadash": "^1.0.0",
     "mobx": "^5.9.4",
     "mobx-react": "^5.4.3",

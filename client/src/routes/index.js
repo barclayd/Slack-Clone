@@ -2,38 +2,45 @@ import React from 'react';
 import {
   BrowserRouter, Route, Switch, Redirect,
 } from 'react-router-dom';
+import decode from 'jwt-decode';
 
 import Home from './Home';
 import Register from './Register';
 import Login from './Login';
 import CreateTeam from './CreateTeam';
 
-export default () => {
-  let routes = (
-    <BrowserRouter>
-      <Switch>
-        <Route path="/" exact component={Home} />
-        <Route path="/register" exact component={Register} />
-        <Route path="/login" exact component={Login} />
-        <Redirect to="/" render={() => Home} />
-      </Switch>
-    </BrowserRouter>
-  );
+const isAuthenticated = () => {
+  const token = localStorage.getItem('token');
+  const refreshToken = localStorage.getItem('token');
 
-  if (localStorage.getItem('token') !== null) {
-    // presume authenticated user
-    routes = (
-      <BrowserRouter>
-        <Switch>
-          <Route path="/" exact component={Home} />
-          <Route path="/register" exact component={Register} />
-          <Route path="/login" exact component={Login} />
-          <Route path="/create-team" exact component={CreateTeam} />
-          <Redirect to="/" render={() => Home} />
-        </Switch>
-      </BrowserRouter>
-    );
+  try {
+    decode(token);
+    decode(refreshToken);
+  } catch (err) {
+    return false;
   }
-
-  return routes;
+  return true;
 };
+
+const PrivateRoute = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={props => (
+      isAuthenticated()
+        ? <Component {...props} />
+        : <Redirect to="/login" />
+    )}
+  />
+);
+
+export default () => (
+  <BrowserRouter>
+    <Switch>
+      <Route path="/" exact component={Home} />
+      <Route path="/register" exact component={Register} />
+      <Route path="/login" exact component={Login} />
+      <PrivateRoute path="/create-team" exact component={CreateTeam} />
+      <Redirect to="/" render={() => Home} />
+    </Switch>
+  </BrowserRouter>
+);
