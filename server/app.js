@@ -43,7 +43,7 @@ const server = new ApolloServer({
   context: ({ req }) => ({
     models,
     user: {
-      id: req.user,
+      id: req.user.id,
     },
     SECRET,
     SECRET2,
@@ -53,6 +53,7 @@ const server = new ApolloServer({
 server.applyMiddleware({ app });
 // sync models with postgres before running server
 models.sequelize.sync().then(() => {
+  // eslint-disable-next-line no-console
   app.listen({ port: 4000 }, () => console.log(
     `🚀 Server ready at http://localhost:4000${server.graphqlPath}`,
   ));
