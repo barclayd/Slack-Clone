@@ -43,7 +43,7 @@ const server = new ApolloServer({
   context: ({ req }) => ({
     models,
     user: {
-      id: req.user.id,
+      id: req.user ? req.user.id : 0,
     },
     SECRET,
     SECRET2,
