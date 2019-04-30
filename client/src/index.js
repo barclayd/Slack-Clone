@@ -1,43 +1,49 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ApolloClient from 'apollo-boost';
+import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
+import { ApolloLink, from } from 'apollo-link';
 import { ApolloProvider } from 'react-apollo';
 import * as serviceWorker from './serviceWorker';
 import Routes from './routes';
 import 'semantic-ui-css/semantic.min.css';
 
-// const client = new ApolloClient({
-//   uri: 'http://localhost:4000/graphql',
-//   request: (operation) => {
-//     operation.setContext({
-//       headers: {
-//         token: localStorage.getItem('token'),
-//         'refresh-token': localStorage.getItem('refreshToken'),
-//       },
-//     });
-//   },
-// });
+const httpLink = createHttpLink({ uri: 'http://localhost:4000/graphql' });
 
-const httpLink = createHttpLink({
-  uri: '/graphql',
-});
+const middlewareLink = setContext(() => ({
+  headers: {
+    'x-token': localStorage.getItem('token'),
+    'x-refresh-token': localStorage.getItem('refreshToken'),
+  },
+}));
 
-const authLink = setContext((_, { headers }) => {
-  // get the authentication token from local storage if it exists
-  const token = localStorage.getItem('token');
-  // return the headers to the context so httpLink can read them
-  return {
-    headers: {
-      ...headers,
-      authorization: token || '',
-    },
-  };
-});
+const afterwareLink = new ApolloLink((operation, forward) => forward(operation).map((response) => {
+  const { response: { headers } } = operation.getContext();
+  if (headers) {
+    const token = headers.get('x-token');
+    const refreshToken = headers.get('x-refresh-token');
+
+    if (token) {
+      localStorage.setItem('token', token);
+    }
+
+    if (refreshToken) {
+      localStorage.setItem('refreshToken', refreshToken);
+    }
+  }
+
+  return response;
+}));
 
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  link: from([
+    middlewareLink,
+    afterwareLink,
+    httpLink,
+  ]),
+  cache: new InMemoryCache(),
 });
 
 const App = (
