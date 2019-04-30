@@ -25,8 +25,8 @@ export const createTokens = (user, secret, secret2) => {
   return [createToken, createRefreshToken];
 };
 
-export const refreshTokens = async (token, refreshToken, models, SECRET) => {
-  let userId = -1;
+export const refreshTokens = async (token, refreshToken, models, SECRET, SECRET2) => {
+  let userId = 0;
   try {
     const {
       user: { id },
@@ -46,8 +46,11 @@ export const refreshTokens = async (token, refreshToken, models, SECRET) => {
     return {};
   }
 
+  const refreshSecret = user.password + SECRET2;
+
+
   try {
-    jwt.verify(refreshToken, user.refreshSecret);
+    jwt.verify(refreshToken, refreshSecret);
   } catch (err) {
     return {};
   }
@@ -55,7 +58,7 @@ export const refreshTokens = async (token, refreshToken, models, SECRET) => {
   const [newToken, newRefreshToken] = await createTokens(
     user,
     SECRET,
-    user.refreshSecret,
+    refreshSecret,
   );
   return {
     token: newToken,
