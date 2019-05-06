@@ -15,4 +15,9 @@ $ npm run start
 $ cd .. && cd client
 $ npm run start
 ```
+
+### Frontend
+
+### Server
+
 ### Future improvements
