@@ -21,3 +21,5 @@ $ npm run start
 ### Server
 
 ### Future improvements
+
+* GraphQL Subscriptions for real time data transfer
