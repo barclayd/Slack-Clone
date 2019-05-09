@@ -5,6 +5,9 @@ Slack clone built using React.js, Node.js and GraphQL.
 ### Features
 
 - [x] Advanced user login and regsitration with refresh token
+- [x] Instant messaging with the use of GraphQL subscriptions as an implementation of websockets
+- [x] Create Teams
+
 
 ### How to Run
 
