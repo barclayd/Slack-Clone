@@ -1,0 +1,20 @@
+import React from 'react';
+import styled from 'styled-components';
+
+const TeamWrapper = styled.div`
+  grid-column: 1;
+  grid-row: 1 / 4;
+  background-color: #362333;
+  color: #958993
+`;
+
+const team = ({ id, letter }) => <li key={`team-${id}`}>{letter}</li>;
+
+export default ({ teams }) => (
+  <TeamWrapper>
+    <ul>
+      <li>Teams</li>
+      {teams.map(team)}
+    </ul>
+  </TeamWrapper>
+);
