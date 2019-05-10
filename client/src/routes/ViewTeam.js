@@ -1,25 +1,23 @@
 import React from 'react';
-import { Grid, Container } from 'semantic-ui-react';
 
-import TeamSidebar from '../components/TeamSidebar';
-import TeamHeader from '../components/TeamHeader';
-import MessageInput from '../components/MessageInput';
+import Channels from '../components/Channels';
+import Header from '../components/Header';
+import Input from '../components/Input';
+import Messages from '../components/Messages';
+import Teams from '../components/Teams';
+import AppLayout from '../components/AppLayout';
 
 export default () => (
-  <Container>
-    <Grid>
-      <Grid.Column width={5}>
-        <TeamSidebar
-          teamName="Team Cardiff"
-          userName="Dan"
-          channelNames={['General', 'Random']}
-          usersToDirectMessage={['Slackbot', 'Dan', 'Kingsley']}
-        />
-      </Grid.Column>
-      <Grid.Column width={10}>
-        <TeamHeader />
-        <MessageInput />
-      </Grid.Column>
-    </Grid>
-  </Container>
+  <AppLayout className="app-layout">
+    <Teams className="teams">Teams</Teams>
+    <Channels> Channels </Channels>
+    <Header className="header">Header</Header>
+    <Messages className="messages">
+      <ul className="message-list">
+        <li />
+        <li />
+      </ul>
+    </Messages>
+    <Input />
+  </AppLayout>
 );
