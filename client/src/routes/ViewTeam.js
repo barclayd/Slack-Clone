@@ -1,17 +1,24 @@
 import React from 'react';
 import {
-  Teams,
-  Channels,
   Header,
   Input,
   Messages,
   Layout,
 } from '../components/MainLayout';
+import Teams from '../components/Teams';
+import Channels from '../components/Channels';
 
 export default () => (
-  <Layout className="app-layout">
-    <Teams className="teams">Teams</Teams>
-    <Channels> Channels </Channels>
+  <Layout>
+    <Teams
+      teams={[{ id: 1, letter: 'D' }, { id: 2, letter: 'B' }]}
+    />
+    <Channels
+      teamName="TeamName"
+      username="Username"
+      channels={[{ id: 1, name: 'general' }, { id: 2, name: 'random' }]}
+      users={[{ id: 1, name: 'slackbot' }, { id: 1, name: 'Bob' }]}
+    />
     <Header className="header">Header</Header>
     <Messages className="messages">
       <ul className="message-list">
