@@ -1,14 +1,15 @@
 import React from 'react';
-
-import Channels from '../components/Channels';
-import Header from '../components/Header';
-import Input from '../components/Input';
-import Messages from '../components/Messages';
-import Teams from '../components/Teams';
-import AppLayout from '../components/AppLayout';
+import {
+  Teams,
+  Channels,
+  Header,
+  Input,
+  Messages,
+  Layout,
+} from '../components/MainLayout';
 
 export default () => (
-  <AppLayout className="app-layout">
+  <Layout className="app-layout">
     <Teams className="teams">Teams</Teams>
     <Channels> Channels </Channels>
     <Header className="header">Header</Header>
@@ -19,5 +20,5 @@ export default () => (
       </ul>
     </Messages>
     <Input />
-  </AppLayout>
+  </Layout>
 );
