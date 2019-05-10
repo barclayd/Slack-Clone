@@ -1,12 +1,13 @@
 import React from 'react';
 import {
-  Header,
-  Input,
   Messages,
   Layout,
 } from '../components/MainLayout';
 import Teams from '../components/Teams';
 import Channels from '../components/Channels';
+import Header from '../components/Header';
+import SendMessage from '../components/SendMessage';
+
 
 export default () => (
   <Layout>
@@ -19,13 +20,13 @@ export default () => (
       channels={[{ id: 1, name: 'general' }, { id: 2, name: 'random' }]}
       users={[{ id: 1, name: 'slackbot' }, { id: 1, name: 'Bob' }]}
     />
-    <Header className="header">Header</Header>
-    <Messages className="messages">
-      <ul className="message-list">
+    <Header channelName="general" />
+    <Messages>
+      <ul>
         <li />
         <li />
       </ul>
     </Messages>
-    <Input />
+    <SendMessage channelName="general" />
   </Layout>
 );
