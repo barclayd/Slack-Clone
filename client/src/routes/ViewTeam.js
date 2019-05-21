@@ -15,7 +15,7 @@ export default () => (
       teams={[{ id: 1, letter: 'D' }, { id: 2, letter: 'B' }]}
     />
     <Channels
-      teamName="TeamName"
+      teamName="Team name"
       username="Username"
       channels={[{ id: 1, name: 'general' }, { id: 2, name: 'random' }]}
       users={[{ id: 1, name: 'slackbot' }, { id: 1, name: 'Bob' }]}
