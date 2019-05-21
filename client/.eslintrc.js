@@ -4,6 +4,8 @@ module.exports = {
   rules: {
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
     'react/prop-types': 0,
+    'react/jsx-one-expression-per-line': 0,
+    'object-curly-newline': 0,
   },
   "env": {
     "browser": true
