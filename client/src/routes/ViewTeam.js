@@ -1,25 +1,12 @@
 import React from 'react';
-import {
-  Messages,
-  Layout,
-} from '../components/MainLayout';
-import Teams from '../components/Teams';
-import Channels from '../components/Channels';
+import { Messages, Layout } from '../components/MainLayout';
+import Sidebar from '../containers/Sidebar';
 import Header from '../components/Header';
 import SendMessage from '../components/SendMessage';
 
-
 export default () => (
   <Layout>
-    <Teams
-      teams={[{ id: 1, letter: 'D' }, { id: 2, letter: 'B' }]}
-    />
-    <Channels
-      teamName="Team name"
-      username="Username"
-      channels={[{ id: 1, name: 'general' }, { id: 2, name: 'random' }]}
-      users={[{ id: 1, name: 'slackbot' }, { id: 1, name: 'Bob' }]}
-    />
+    <Sidebar currentTeamId={1} />
     <Header channelName="general" />
     <Messages>
       <ul>
