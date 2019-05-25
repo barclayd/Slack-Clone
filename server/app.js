@@ -1,5 +1,6 @@
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
+import path from 'path';
 import typeDefs from './graphql/typeDefs';
 import resolvers from './graphql/resolvers';
 import models from './models';
@@ -51,6 +52,8 @@ const server = new ApolloServer({
 });
 
 server.applyMiddleware({ app });
+
+app.use('/images', express.static(path.join(__dirname, './images')));
 // sync models with postgres before running server
 models.sequelize.sync().then(() => {
   // eslint-disable-next-line no-console

@@ -6,11 +6,13 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
 import { ApolloLink, from } from 'apollo-link';
 import { ApolloProvider } from 'react-apollo';
+// import { createUploadLink } from 'apollo-upload-client';
 import * as serviceWorker from './serviceWorker';
 import Routes from './routes';
 import 'semantic-ui-css/semantic.min.css';
 
 const httpLink = createHttpLink({ uri: 'http://localhost:4000/graphql' });
+// const httpLink = createUploadLink({ uri: 'http://localhost:4000/graphql' });
 
 const middlewareLink = setContext(() => ({
   headers: {
