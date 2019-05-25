@@ -61,7 +61,12 @@ class Sidebar extends Component {
           users={[{ id: 1, name: 'slackbot' }, { id: 1, name: 'Bob' }]}
           onAddChannelClick={handleAddChannelClick}
         />
-        <AddChannelModal toggle={handleAddChannelClick} open={modalVisible} key="sidebar-add-channel-modal" />
+        <AddChannelModal
+          teamId={parseInt(currentTeamId, 10)}
+          toggle={handleAddChannelClick}
+          open={modalVisible}
+          key="sidebar-add-channel-modal"
+        />
       </>
     );
   }
