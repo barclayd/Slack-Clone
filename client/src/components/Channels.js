@@ -48,7 +48,7 @@ const PushLeft = styled.div`
 `;
 
 const user = ({ id, name }) => (
-  <SideBarListItem key={`user-${id}`}>
+  <SideBarListItem key={`user-${id + name}`}>
     <Bubble /> {name}
   </SideBarListItem>
 );
