@@ -14,6 +14,7 @@ export default {
           await models.Channel.create({ name: 'general', public: true, teamId: team.id });
           return {
             ok: true,
+            team,
           };
         } catch (err) {
           // eslint-disable-next-line no-console

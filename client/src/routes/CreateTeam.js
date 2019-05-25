@@ -39,11 +39,11 @@ class CreateTeam extends Component {
     }
 
     const {
-      ok, errors,
+      ok, errors, team,
     } = response.data.createTeam;
 
     if (ok) {
-      history.push('/');
+      history.push(`/view-team/${team.id}`);
     } else {
       const validationErrors = {};
       errors.forEach(({ path, message }) => {
@@ -102,6 +102,9 @@ const createTeamMutation = gql`
     name: $name
   ) {
     ok
+    team {
+      id
+    }
     errors {
       path
       message
