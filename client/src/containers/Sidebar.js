@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { graphql } from 'react-apollo';
 import decode from 'jwt-decode';
-import { allTeamsQuery } from '../graphql/team';
 import Teams from '../components/Teams';
 import Channels from '../components/Channels';
 import AddChannelModal from '../components/AddChannelModal';
@@ -20,22 +18,12 @@ class Sidebar extends Component {
 
   render() {
     const {
-      // eslint-disable-next-line no-shadow
-      data: { loading, allTeams },
-      currentTeamId,
+      teams, team,
     } = this.props;
 
     const { modalVisible } = this.state;
 
     const { handleAddChannelClick } = this;
-
-    if (loading) {
-      return null;
-    }
-
-    const team = currentTeamId
-      ? allTeams.filter(t => t.id === parseInt(currentTeamId, 10))[0]
-      : allTeams[0];
 
     let username = '';
     try {
@@ -47,13 +35,10 @@ class Sidebar extends Component {
       console.log(err);
     }
 
-    return loading ? null : (
+    return (
       <>
         <Teams
-          teams={allTeams.map(t => ({
-            id: t.id,
-            letter: t.name[0].toUpperCase(),
-          }))}
+          teams={teams}
         />
         <Channels
           teamName={team.name}
@@ -74,4 +59,4 @@ class Sidebar extends Component {
   }
 }
 
-export default graphql(allTeamsQuery)(Sidebar);
+export default Sidebar;
