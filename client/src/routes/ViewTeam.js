@@ -16,13 +16,12 @@ const ViewTeam = ({
     return null;
   }
 
-  const team = !!teamId
-    ? allTeams.filter(t => t.id === parseInt(teamId, 10))[0]
-    : allTeams[0];
+  const identifySelected = (item, arr) => (item
+    ? arr.filter(a => parseInt(a.id, 10) === parseInt(item, 10))[0]
+    : arr[0]);
 
-  const channel = !!channelId
-    ? team.channels.filter(c => parseInt(c.id, 10) === parseInt(channelId, 10))[0]
-    : team.channels[0];
+  const team = identifySelected(teamId, allTeams);
+  const channel = identifySelected(channelId, team.channels);
 
   return (
     <Layout>
@@ -35,7 +34,7 @@ const ViewTeam = ({
         }))}
       />
       <Header channelName={channel.name} />
-      <Messages>
+      <Messages channelId={channel.id}>
         <ul>
           <li />
           <li />

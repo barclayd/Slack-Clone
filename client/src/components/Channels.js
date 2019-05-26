@@ -54,6 +54,11 @@ const PushLeft = styled.div`
   ${paddingLeft};
 `;
 
+const AddNewUsers = styled.div`
+  ${paddingLeft};
+  color: #b1a8af;
+`;
+
 const user = ({ id, name }) => (
   <SideBarListItem key={`user-${id + name}`}>
     <Bubble /> {name}
@@ -66,6 +71,7 @@ export default ({
   channels,
   users,
   onAddChannelClick,
+  onAddUsersClick,
   teamId,
 }) => (
   <ChannelWrapper>
@@ -87,5 +93,9 @@ export default ({
         {users.map(user)}
       </SideBarList>
     </div>
+    <AddNewUsers>
+      <Icon name="add" onClick={onAddUsersClick} />
+      Invite People
+    </AddNewUsers>
   </ChannelWrapper>
 );
