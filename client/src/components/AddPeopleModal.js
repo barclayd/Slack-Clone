@@ -64,7 +64,7 @@ export default compose(
     mapPropsToValues: () => ({ email: '' }),
     handleSubmit: async (
       values,
-      { props: { toggle, teamId, mutate }, setSubmitting, setErrors },
+      { props: { toggle, teamId, mutate }, setErrors, resetForm, setSubmitting },
     ) => {
       const {
         data: {
@@ -78,7 +78,7 @@ export default compose(
       });
       if (ok) {
         toggle();
-        setSubmitting(false);
+        resetForm();
       } else {
         setSubmitting(false);
         setErrors(normaliseErrors(errors));

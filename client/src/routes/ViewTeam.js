@@ -8,7 +8,7 @@ import SendMessage from '../components/SendMessage';
 import { allTeamsQuery } from '../graphql/team';
 
 const ViewTeam = ({
-  data: { loading, allTeams },
+  data: { loading, allTeams, inviteTeams },
   match: {
     params: { teamId, channelId },
   },
@@ -20,6 +20,9 @@ const ViewTeam = ({
   if (!allTeams.length) {
     return <Redirect to="/create-team" />;
   }
+
+  const teams = [...allTeams, ...inviteTeams];
+
   // check if teamId in query string in an integer
   if (!parseInt(teamId, 10) && teamId) {
     return <Redirect to="/view-team" />;
@@ -33,7 +36,7 @@ const ViewTeam = ({
     ? arr.filter(a => parseInt(a.id, 10) === parseInt(item, 10))[0]
     : arr[0]);
 
-  const team = identifySelected(teamId, allTeams);
+  const team = identifySelected(teamId, teams);
   // check if teamId in query string in valid
   if (!team) {
     return <Redirect to="/view-team" />;
@@ -46,9 +49,9 @@ const ViewTeam = ({
   return (
     <Layout>
       <Sidebar
-        allTeams={allTeams}
+        allTeams={teams}
         team={team}
-        teams={allTeams.map(t => ({
+        teams={teams.map(t => ({
           id: t.id,
           letter: t.name[0].toUpperCase(),
         }))}
