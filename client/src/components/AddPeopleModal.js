@@ -1,8 +1,9 @@
 import React from 'react';
-import { Form, Modal, Input } from 'semantic-ui-react';
+import { Form, Modal, Input, Message } from 'semantic-ui-react';
 import { withFormik } from 'formik';
 import { compose, graphql } from 'react-apollo';
 import { addTeamMemberMutation } from '../graphql/team';
+import normaliseErrors from '../helpers/normaliseErrors';
 
 const InvitePeopleModal = ({
   open,
@@ -12,10 +13,19 @@ const InvitePeopleModal = ({
   isSubmitting,
   handleChange,
   handleSubmit,
+  touched,
+  errors,
 }) => (
   <Modal open={open} closeIcon onClose={toggle}>
     <Modal.Header>Invite People</Modal.Header>
     <Modal.Content>
+      {touched.email && errors.email ? (
+        <Message
+          error
+          header="There were some errors with adding inviting the specified user"
+          list={errors.email}
+        />
+      ) : null}
       <Form>
         <Form.Field>
           <Input
@@ -54,11 +64,11 @@ export default compose(
     mapPropsToValues: () => ({ email: '' }),
     handleSubmit: async (
       values,
-      { props: { toggle, teamId, mutate }, setSubmitting },
+      { props: { toggle, teamId, mutate }, setSubmitting, setErrors },
     ) => {
       const {
         data: {
-          createChannel: { ok },
+          addTeamMember: { ok, errors },
         },
       } = await mutate({
         variables: {
@@ -69,6 +79,9 @@ export default compose(
       if (ok) {
         toggle();
         setSubmitting(false);
+      } else {
+        setSubmitting(false);
+        setErrors(normaliseErrors(errors));
       }
     },
   }),
