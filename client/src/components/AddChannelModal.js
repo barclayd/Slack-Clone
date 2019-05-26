@@ -1,8 +1,8 @@
 import React from 'react';
-import { Button, Form, Modal } from 'semantic-ui-react';
+import { Form, Modal, Input } from 'semantic-ui-react';
 import { withFormik } from 'formik';
-import gql from 'graphql-tag';
 import { compose, graphql } from 'react-apollo';
+import { createChannelMutation, allTeamsQuery } from '../graphql/team';
 
 const AddChannelModal = ({
   open,
@@ -18,7 +18,7 @@ const AddChannelModal = ({
     <Modal.Content>
       <Form>
         <Form.Field>
-          <Form.Input
+          <Input
             value={values.name}
             onChange={handleChange}
             onBlur={handleBlur}
@@ -29,35 +29,23 @@ const AddChannelModal = ({
           />
         </Form.Field>
         <Form.Group widths="equal">
-          <Button
-            fluid
-            color="red"
-            type="submit"
-            disabled={isSubmitting}
-            onClick={toggle}
-          >
+          <Form.Button fluid disabled={isSubmitting} onClick={toggle}>
             Cancel
-          </Button>
-          <Button
-            fluid
-            secondary
+          </Form.Button>
+          <Form.Button
             type="submit"
+            color="black"
+            fluid
             disabled={isSubmitting}
             onClick={handleSubmit}
           >
-            Submit
-          </Button>
+            Create Channel
+          </Form.Button>
         </Form.Group>
       </Form>
     </Modal.Content>
   </Modal>
 );
-
-const createChannelMutation = gql`
-  mutation($teamId: Int!, $name: String!) {
-    createChannel(teamId: $teamId, name: $name)
-  }
-`;
 
 export default compose(
   graphql(createChannelMutation),
@@ -68,11 +56,34 @@ export default compose(
       { props: { toggle, teamId, mutate }, setSubmitting },
     ) => {
       const {
-        data: { createChannel },
+        data: {
+          createChannel: { ok },
+        },
       } = await mutate({
         variables: { teamId, name: values.name },
+        update: (
+          proxy,
+          {
+            data: {
+              // eslint-disable-next-line no-shadow
+              createChannel: { ok, channel },
+            },
+          },
+        ) => {
+          if (ok) {
+            const data = proxy.readQuery({ query: allTeamsQuery });
+            const currentTeam = data.allTeams.indexOf(
+              data.allTeams.find(team => team.id === teamId),
+            );
+            data.allTeams[currentTeam].channels.push(channel);
+            proxy.writeQuery({
+              query: allTeamsQuery,
+              data,
+            });
+          }
+        },
       });
-      if (createChannel) {
+      if (ok) {
         toggle();
         setSubmitting(false);
       }
