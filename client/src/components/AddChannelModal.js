@@ -61,6 +61,18 @@ export default compose(
         },
       } = await mutate({
         variables: { teamId, name: values.name },
+        optimisticResponse: {
+          __typename: 'Mutation',
+          createChannel: {
+            __typename: 'Mutation',
+            ok: true,
+            channel: {
+              __typename: 'Channel',
+              id: -1,
+              name: values.name,
+            },
+          },
+        },
         update: (
           proxy,
           {
