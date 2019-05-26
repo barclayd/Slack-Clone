@@ -8,22 +8,34 @@ export default {
       // eslint-disable-next-line max-len
       async (parent, args, { models, user }) => models.Team.findAll({ where: { owner: user.id } }, { raw: true }),
     ),
+    inviteTeams: requiresAuth.createResolver(
+      // eslint-disable-next-line max-len
+      async (parent, args, { models, user }) => models.Team.findAll(
+        {
+          include: [
+            {
+              model: models.User,
+              where: { id: user.id },
+            },
+          ],
+        },
+        { raw: true },
+      ),
+    ),
   },
   Mutation: {
     createTeam: requiresAuth.createResolver(
       async (parent, args, { models, user }) => {
         try {
-          const response = await models.sequelize.transaction(
-            async () => {
-              const team = await models.Team.create({ ...args, owner: user.id });
-              await models.Channel.create({
-                name: 'general',
-                public: true,
-                teamId: team.id,
-              });
-              return team;
-            },
-          );
+          const response = await models.sequelize.transaction(async () => {
+            const team = await models.Team.create({ ...args, owner: user.id });
+            await models.Channel.create({
+              name: 'general',
+              public: true,
+              teamId: team.id,
+            });
+            return team;
+          });
           return {
             ok: true,
             team: response,

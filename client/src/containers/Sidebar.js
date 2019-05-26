@@ -11,14 +11,20 @@ class Sidebar extends Component {
     addPeopleModalVisible: false,
   };
 
-  handleAddChannelClick = () => {
+  handleAddChannelClick = (e) => {
+    if (e) {
+      e.preventDefault();
+    }
     this.setState(prevState => ({
       ...prevState,
       addChannelModalVisible: !prevState.addChannelModalVisible,
     }));
   };
 
-  handleAddUsersClick = () => {
+  handleAddUsersClick = (e) => {
+    if (e) {
+      e.preventDefault();
+    }
     this.setState(prevState => ({
       ...prevState,
       addPeopleModalVisible: !prevState.addPeopleModalVisible,
