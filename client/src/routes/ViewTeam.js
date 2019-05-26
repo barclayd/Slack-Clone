@@ -7,14 +7,14 @@ import SendMessage from '../components/SendMessage';
 const ViewTeam = ({ match: { params } }) => (
   <Layout>
     <Sidebar currentTeamId={params.teamId} />
-    <Header channelName="general" />
+    <Header channelName={params.channelId} />
     <Messages>
       <ul>
         <li />
         <li />
       </ul>
     </Messages>
-    <SendMessage channelName="general" />
+    <SendMessage channelName={params.channelId} />
   </Layout>
 );
 

@@ -59,6 +59,7 @@ class Sidebar extends Component {
           teamName={team.name}
           username={username}
           channels={team.channels}
+          teamId={team.id}
           users={[{ id: 1, name: 'slackbot' }, { id: 1, name: 'Bob' }]}
           onAddChannelClick={handleAddChannelClick}
         />
