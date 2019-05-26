@@ -35,7 +35,7 @@ const SideBarListItem = styled.li`
 `;
 
 const SideBarHeaderList = styled.li`
-  ${paddingLeft}
+  ${paddingLeft};
 `;
 
 const channel = ({ id, name }, teamId) => (
@@ -57,6 +57,7 @@ const PushLeft = styled.div`
 const AddNewUsers = styled.div`
   ${paddingLeft};
   color: #b1a8af;
+  cursor: pointer;
 `;
 
 const user = ({ id, name }) => (
@@ -81,8 +82,11 @@ export default ({
     </PushLeft>
     <div>
       <SideBarList>
-        <SideBarHeaderList>
-          Channels <Icon onClick={onAddChannelClick} name="add circle" />
+        <SideBarHeaderList
+          onClick={onAddChannelClick}
+          style={{ cursor: 'pointer' }}
+        >
+          Channels <Icon name="add circle" />
         </SideBarHeaderList>
         {channels.map(c => channel(c, teamId))}
       </SideBarList>
@@ -93,8 +97,8 @@ export default ({
         {users.map(user)}
       </SideBarList>
     </div>
-    <AddNewUsers>
-      <Icon name="add" onClick={onAddUsersClick} />
+    <AddNewUsers onClick={onAddUsersClick}>
+      <Icon name="add" />
       Invite People
     </AddNewUsers>
   </ChannelWrapper>
