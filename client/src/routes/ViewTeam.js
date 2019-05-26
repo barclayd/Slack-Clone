@@ -1,5 +1,6 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
+import { Redirect } from 'react-router-dom';
 import { Messages, Layout } from '../components/MainLayout';
 import Sidebar from '../containers/Sidebar';
 import Header from '../components/Header';
@@ -16,7 +17,19 @@ const ViewTeam = ({
     return null;
   }
 
-  const identifySelected = (item, arr) => (item
+  if (!allTeams.length) {
+    return <Redirect to="/create-team" />;
+  }
+
+  if (!parseInt(teamId, 10) && teamId) {
+    return <Redirect to="/view-team" />;
+  }
+
+  if (!parseInt(channelId, 10) && channelId) {
+    return <Redirect to={`/view-team/${teamId}`} />;
+  }
+
+  const identifySelected = (item, arr) => (parseInt(item, 10)
     ? arr.filter(a => parseInt(a.id, 10) === parseInt(item, 10))[0]
     : arr[0]);
 
