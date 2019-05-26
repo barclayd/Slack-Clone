@@ -16,15 +16,15 @@ const ViewTeam = ({
   if (loading) {
     return null;
   }
-
+  // check if logged in user has any teams
   if (!allTeams.length) {
     return <Redirect to="/create-team" />;
   }
-
+  // check if teamId in query string in an integer
   if (!parseInt(teamId, 10) && teamId) {
     return <Redirect to="/view-team" />;
   }
-
+  // check if channeldId in query string in an integer
   if (!parseInt(channelId, 10) && channelId) {
     return <Redirect to={`/view-team/${teamId}`} />;
   }
@@ -34,8 +34,15 @@ const ViewTeam = ({
     : arr[0]);
 
   const team = identifySelected(teamId, allTeams);
+  // check if teamId in query string in valid
+  if (!team) {
+    return <Redirect to="/view-team" />;
+  }
   const channel = identifySelected(channelId, team.channels);
-
+  // check if channel in query string in valid
+  if (!channel) {
+    return <Redirect to={`/view-team/${teamId}`} />;
+  }
   return (
     <Layout>
       <Sidebar
