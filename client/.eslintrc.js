@@ -6,7 +6,6 @@ module.exports = {
     'react/prop-types': 0,
     'react/jsx-one-expression-per-line': 0,
     'object-curly-newline': 0,
-    'no-extra-boolean-cast': 0,
   },
   "env": {
     "browser": true

@@ -3,16 +3,25 @@ import decode from 'jwt-decode';
 import Teams from '../components/Teams';
 import Channels from '../components/Channels';
 import AddChannelModal from '../components/AddChannelModal';
+import AddPeopleModal from '../components/AddPeopleModal';
 
 class Sidebar extends Component {
   state = {
-    modalVisible: false,
+    addChannelModalVisible: false,
+    addPeopleModalVisible: false,
   };
 
   handleAddChannelClick = () => {
     this.setState(prevState => ({
       ...prevState,
-      modalVisible: !prevState.modalVisible,
+      addChannelModalVisible: !prevState.addChannelModalVisible,
+    }));
+  };
+
+  handleAddUsersClick = () => {
+    this.setState(prevState => ({
+      ...prevState,
+      addPeopleModalVisible: !prevState.addPeopleModalVisible,
     }));
   };
 
@@ -21,9 +30,9 @@ class Sidebar extends Component {
       teams, team,
     } = this.props;
 
-    const { modalVisible } = this.state;
+    const { addChannelModalVisible, addPeopleModalVisible } = this.state;
 
-    const { handleAddChannelClick } = this;
+    const { handleAddChannelClick, handleAddUsersClick } = this;
 
     let username = '';
     try {
@@ -47,12 +56,19 @@ class Sidebar extends Component {
           teamId={team.id}
           users={[{ id: 1, name: 'slackbot' }, { id: 1, name: 'Bob' }]}
           onAddChannelClick={handleAddChannelClick}
+          onAddUsersClick={handleAddUsersClick}
         />
         <AddChannelModal
           teamId={parseInt(team.id, 10)}
           toggle={handleAddChannelClick}
-          open={modalVisible}
+          open={addChannelModalVisible}
           key="sidebar-add-channel-modal"
+        />
+        <AddPeopleModal
+          teamId={parseInt(team.id, 10)}
+          toggle={handleAddUsersClick}
+          open={addPeopleModalVisible}
+          key="sidebar-add-people-modal"
         />
       </>
     );
