@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
 import decode from 'jwt-decode';
+import { allTeamsQuery } from '../graphql/team';
 import Teams from '../components/Teams';
 import Channels from '../components/Channels';
 import AddChannelModal from '../components/AddChannelModal';
@@ -20,6 +20,7 @@ class Sidebar extends Component {
 
   render() {
     const {
+      // eslint-disable-next-line no-shadow
       data: { loading, allTeams },
       currentTeamId,
     } = this.props;
@@ -62,7 +63,7 @@ class Sidebar extends Component {
           onAddChannelClick={handleAddChannelClick}
         />
         <AddChannelModal
-          teamId={parseInt(currentTeamId, 10)}
+          teamId={parseInt(team.id, 10)}
           toggle={handleAddChannelClick}
           open={modalVisible}
           key="sidebar-add-channel-modal"
@@ -72,17 +73,4 @@ class Sidebar extends Component {
   }
 }
 
-const allTeams = gql`
-  {
-    allTeams {
-      id
-      name
-      channels {
-        id
-        name
-      }
-    }
-  }
-`;
-
-export default graphql(allTeams)(Sidebar);
+export default graphql(allTeamsQuery)(Sidebar);

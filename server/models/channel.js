@@ -3,7 +3,7 @@ export default (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     public: {
       type: DataTypes.BOOLEAN,
-      defaultValue: true,
+      defaultValue: false,
     },
   });
 
