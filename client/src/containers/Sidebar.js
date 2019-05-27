@@ -32,33 +32,33 @@ class Sidebar extends Component {
   };
 
   render() {
-    const {
-      teams, team,
-    } = this.props;
+    const { teams, team } = this.props;
 
     const { addChannelModalVisible, addPeopleModalVisible } = this.state;
 
     const { handleAddChannelClick, handleAddUsersClick } = this;
 
     let username = '';
+    let id = '';
+
     try {
       const token = localStorage.getItem('token');
       const { user } = decode(token);
-      ({ username } = user.username);
+      ({ username } = user);
+      ({ id } = user);
     } catch (err) {
       // eslint-disable-next-line no-console
       console.log(err);
     }
-
     return (
       <>
-        <Teams
-          teams={teams}
-        />
+        <Teams teams={teams} />
         <Channels
           teamName={team.name}
           username={username}
+          isOwner={id === team.owner}
           channels={team.channels}
+          owner={team.owner}
           teamId={team.id}
           users={[{ id: 1, name: 'slackbot' }, { id: 1, name: 'Bob' }]}
           onAddChannelClick={handleAddChannelClick}

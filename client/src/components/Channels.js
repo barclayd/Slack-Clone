@@ -74,6 +74,7 @@ export default ({
   onAddChannelClick,
   onAddUsersClick,
   teamId,
+  isOwner,
 }) => (
   <ChannelWrapper>
     <PushLeft>
@@ -82,11 +83,15 @@ export default ({
     </PushLeft>
     <div>
       <SideBarList>
-        <SideBarHeaderList
-          onClick={onAddChannelClick}
-          style={{ cursor: 'pointer' }}
-        >
-          Channels <Icon name="add circle" />
+        <SideBarHeaderList>
+          Channels{' '}
+          {isOwner && (
+            <Icon
+              onClick={onAddChannelClick}
+              style={{ cursor: 'pointer' }}
+              name="add circle"
+            />
+          )}
         </SideBarHeaderList>
         {channels.map(c => channel(c, teamId))}
       </SideBarList>
@@ -97,9 +102,11 @@ export default ({
         {users.map(user)}
       </SideBarList>
     </div>
-    <AddNewUsers onClick={onAddUsersClick}>
-      <Icon name="add" />
-      Invite People
-    </AddNewUsers>
+    {isOwner && (
+      <AddNewUsers onClick={onAddUsersClick}>
+        <Icon name="add" />
+        Invite People
+      </AddNewUsers>
+    )}
   </ChannelWrapper>
 );

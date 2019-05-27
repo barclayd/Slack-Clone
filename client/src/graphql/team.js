@@ -5,6 +5,7 @@ export const allTeamsQuery = gql`
     allTeams {
       id
       name
+      owner
       channels {
         id
         name
@@ -12,13 +13,14 @@ export const allTeamsQuery = gql`
     }
     inviteTeams {
       id
+      name
+      owner
+      channels {
+        id
         name
-        channels {
-          id
-          name
-       }
-     }
-   }
+      }
+    }
+  }
 `;
 
 export const createChannelMutation = gql`
@@ -34,13 +36,13 @@ export const createChannelMutation = gql`
 `;
 
 export const addTeamMemberMutation = gql`
-mutation ($email: String!, $teamId: Int!) {
-  addTeamMember(email:$email, teamId: $teamId) {
-    ok
-    errors {
-      path
-      message
+  mutation($email: String!, $teamId: Int!) {
+    addTeamMember(email: $email, teamId: $teamId) {
+      ok
+      errors {
+        path
+        message
+      }
     }
   }
-}
 `;
