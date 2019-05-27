@@ -63,7 +63,10 @@ const ViewTeam = ({
           <li />
         </ul>
       </Messages>
-      <SendMessage channelName={channel.name} />
+      <SendMessage
+        channelName={channel.name}
+        channelId={parseInt(channel.id, 10)}
+      />
     </Layout>
   );
 };

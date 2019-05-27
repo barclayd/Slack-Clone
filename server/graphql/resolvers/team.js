@@ -9,17 +9,11 @@ export default {
       async (parent, args, { models, user }) => models.Team.findAll({ where: { owner: user.id } }, { raw: true }),
     ),
     inviteTeams: requiresAuth.createResolver(
-      // eslint-disable-next-line max-len
-      async (parent, args, { models, user }) => models.Team.findAll(
-        {
-          include: [
-            {
-              model: models.User,
-              where: { id: user.id },
-            },
-          ],
+      async (parent, args, { models, user }) => models.sequelize.query(
+        'select * from teams t join members m on t.id = m.team_id where m.user_id = ?', {
+          replacements: [user.id],
+          model: models.Team,
         },
-        { raw: true },
       ),
     ),
   },
