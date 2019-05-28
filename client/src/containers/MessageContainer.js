@@ -9,10 +9,51 @@ import {
 
 class MessageContainer extends Component {
   componentWillMount() {
+    const { channelId } = this.props;
+    this.unsubscribe = this.subscribe(channelId);
+  }
+
+  componentWillReceiveProps({ channelId }) {
+    const { props } = this;
+    if (props.channelId !== channelId) {
+      if (this.unsubscribe) {
+        this.unsubscribe();
+      }
+      const {
+        data: { subscribeToMore },
+      } = this.props;
+      this.unsubscribe = subscribeToMore({
+        document: newChannelMessageSubscription,
+        variables: {
+          channelId,
+        },
+        updateQuery: (prev, { subscriptionData }) => {
+          if (!subscriptionData) {
+            return prev;
+          }
+          return {
+            ...prev,
+            messages: [
+              ...prev.messages,
+              subscriptionData.data.newChannelMessage,
+            ],
+          };
+        },
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+  }
+
+  subscribe = (channelId) => {
     const {
-      data: { subscribeToMore }, channelId,
+      data: { subscribeToMore },
     } = this.props;
-    subscribeToMore({
+    return subscribeToMore({
       document: newChannelMessageSubscription,
       variables: {
         channelId,
@@ -27,7 +68,7 @@ class MessageContainer extends Component {
         };
       },
     });
-  }
+  };
 
   render() {
     const {
@@ -62,4 +103,7 @@ class MessageContainer extends Component {
 
 export default graphql(messagesQuery, {
   variables: props => ({ channelId: props.channelId }),
+  options: {
+    fetchPolicy: 'network-only',
+  },
 })(MessageContainer);
