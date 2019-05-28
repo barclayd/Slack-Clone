@@ -2,7 +2,7 @@ import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
-import { ApolloLink, from, split } from 'apollo-link';
+import { ApolloLink, split } from 'apollo-link';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 
@@ -23,26 +23,28 @@ const middlewareLink = setContext(() => ({
   },
 }));
 
-const afterwareLink = new ApolloLink((operation, forward) =>
-  forward(operation).map((response) => {
-    const {
-      response: { headers },
-    } = operation.getContext();
-    if (headers) {
-      const token = headers.get('x-token');
-      const refreshToken = headers.get('x-refresh-token');
+const afterwareLink = new ApolloLink((operation, forward) => {
+  const { headers } = operation.getContext();
 
-      if (token) {
-        localStorage.setItem('token', token);
-      }
+  if (headers) {
+    const token = headers.get('x-token');
+    const refreshToken = headers.get('x-refresh-token');
 
-      if (refreshToken) {
-        localStorage.setItem('refreshToken', refreshToken);
-      }
+    if (token) {
+      localStorage.setItem('token', token);
     }
 
-    return response;
-  }));
+    if (refreshToken) {
+      localStorage.setItem('refreshToken', refreshToken);
+    }
+  }
+
+  return forward(operation);
+});
+
+const httpLinkWithMiddleware = afterwareLink.concat(
+  middlewareLink.concat(httpLink),
+);
 
 const link = split(
   // split based on operation type
@@ -54,10 +56,10 @@ const link = split(
     );
   },
   wsLink,
-  httpLink,
+  httpLinkWithMiddleware,
 );
 
 export default new ApolloClient({
-  link: from([middlewareLink, afterwareLink, link]),
+  link,
   cache: new InMemoryCache(),
 });

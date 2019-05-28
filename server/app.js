@@ -55,11 +55,9 @@ app.use(addUser);
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => ({
+  context: ({ req, connection }) => ({
     models,
-    user: {
-      id: req.user ? req.user.id : 0,
-    },
+    user: connection ? connection.context : req.user,
     SECRET,
     SECRET2,
   }),
