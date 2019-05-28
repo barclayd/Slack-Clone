@@ -37,9 +37,7 @@ export default {
             channelId: args.channelId,
             newChannelMessage: {
               ...message.dataValues,
-              user: {
-                username: user.username,
-              },
+              user,
             },
           });
 
@@ -54,7 +52,7 @@ export default {
     newChannelMessage: {
       subscribe: withFilter(
         () => pubSub.asyncIterator('NEW_CHANNEL_MESSAGE'),
-        (payload, { channelId }) => payload.channelId === channelId,
+        (payload, { channelId }) => parseInt(payload.channelId, 10) === parseInt(channelId, 10),
       ),
     },
   },
