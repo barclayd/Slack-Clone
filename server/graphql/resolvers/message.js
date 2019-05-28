@@ -8,7 +8,7 @@ export default {
   Query: {
     messages: requiresAuth.createResolver(
       // eslint-disable-next-line max-len
-      async (parent, { channelId }, { models }) => models.Message.findAll({ where: { channelId } }, { raw: true }),
+      async (parent, { channelId }, { models }) => models.Message.findAll({ order: [['created_at', 'ASC']], where: { channelId } }, { raw: true }),
     ),
   },
   Mutation: {
