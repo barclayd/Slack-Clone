@@ -1,6 +1,10 @@
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import path from 'path';
+import { execute, subscribe } from 'graphql';
+import { createServer } from 'http';
+import { SubscriptionServer } from 'subscriptions-transport-ws';
+import { makeExecutableSchema } from 'graphql-tools';
 import typeDefs from './graphql/typeDefs';
 import resolvers from './graphql/resolvers';
 import models from './models';
@@ -15,6 +19,11 @@ const SECRET2 = 'Ro901341mi1zsxzhtZecjECxYf4324';
 const app = express();
 app.use(cors('*'));
 
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers,
+});
+
 const addUser = async (req, res, next) => {
   const token = req.headers['x-token'];
   if (token) {
@@ -24,7 +33,13 @@ const addUser = async (req, res, next) => {
     } catch (err) {
       // if token is invalid, use attempt to refresh tokens
       const refreshToken = req.headers['x-refresh-token'];
-      const newTokens = await refreshTokens(token, refreshToken, models, SECRET, SECRET2);
+      const newTokens = await refreshTokens(
+        token,
+        refreshToken,
+        models,
+        SECRET,
+        SECRET2,
+      );
       if (newTokens.token && newTokens.refreshToken) {
         res.set('Access-Control-Expose-Headers', 'x-token, x-refresh-token');
         res.set('x-token', newTokens.token);
@@ -37,7 +52,6 @@ const addUser = async (req, res, next) => {
 };
 
 app.use(addUser);
-
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -55,9 +69,26 @@ server.applyMiddleware({ app });
 
 app.use('/images', express.static(path.join(__dirname, './images')));
 // sync models with postgres before running server
+
+const subscriptionServer = createServer(app);
+
 models.sequelize.sync().then(() => {
-  // eslint-disable-next-line no-console
-  app.listen({ port: 4000 }, () => console.log(
-    `🚀 Server ready at http://localhost:4000${server.graphqlPath}`,
-  ));
+  subscriptionServer.listen({ port: 4000 }, () => {
+    // eslint-disable-next-line no-new
+    new SubscriptionServer(
+      {
+        execute,
+        subscribe,
+        schema,
+      },
+      {
+        server: subscriptionServer,
+        path: '/subscriptions',
+      },
+    );
+    // eslint-disable-next-line no-console
+    console.log(
+      `🚀 Server ready at http://localhost:4000${server.graphqlPath}`,
+    );
+  });
 });

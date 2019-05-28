@@ -5,6 +5,6 @@ export default `
   }
   
   type Mutation {
-    uploadFile(file: Upload!): Boolean
+    uploadFile(file: Int!): Boolean
   }
 `;
