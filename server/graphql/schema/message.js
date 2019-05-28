@@ -4,6 +4,11 @@ export default `
     text: String
     channel: Channel!
     user: User!
+    createdAt: String!
+  }
+  
+  type Query {
+    messages(channelId: Int!): [Message!]!
   }
   
    type Mutation {
