@@ -6,4 +6,15 @@ mutation($channelId: Int!, $text: String!) {
 }
 `;
 
-export const messageQuery = {};
+export const messagesQuery = gql`
+query($channelId: Int!) {
+  messages(channelId: $channelId) {
+    text
+    id
+    createdAt
+    user {
+      username
+    }
+  }
+}
+`;
