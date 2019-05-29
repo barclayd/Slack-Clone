@@ -54,6 +54,9 @@ const addUser = async (req, res, next) => {
 app.use(addUser);
 const server = new ApolloServer({
   typeDefs,
+  playground: {
+    subscriptionEndpoint: 'ws://localhost:4000/subscriptions',
+  },
   resolvers,
   context: ({ req, connection }) => ({
     models,
@@ -78,6 +81,28 @@ models.sequelize.sync().then(() => {
         execute,
         subscribe,
         schema,
+        onConnect: async ({ token, refreshToken }) => {
+          if (token && refreshToken) {
+            let user = null;
+            try {
+              ({ user } = jwt.verify(token, SECRET));
+            } catch (err) {
+              const newTokens = await refreshTokens(
+                token,
+                refreshToken,
+                models,
+                SECRET,
+                SECRET2,
+              );
+              ({ user } = newTokens);
+            }
+            if (!user) {
+              throw new Error('Invalid auth tokens');
+            }
+            return true;
+          }
+          throw new Error('Missing auth token!');
+        },
       },
       {
         server: subscriptionServer,
