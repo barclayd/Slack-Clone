@@ -6,10 +6,10 @@ import Sidebar from '../containers/Sidebar';
 import Header from '../components/Header';
 import MessageContainer from '../containers/MessageContainer';
 import SendMessage from '../components/SendMessage';
-import { allTeamsQuery } from '../graphql/team';
+import { meQuery } from '../graphql/team';
 
 const ViewTeam = ({
-  data: { loading, allTeams, inviteTeams },
+  data: { loading, me },
   match: {
     params: { teamId, channelId },
   },
@@ -17,12 +17,13 @@ const ViewTeam = ({
   if (loading) {
     return null;
   }
+
+  const { teams } = me;
+
   // check if logged in user has any teams
-  if (!allTeams.length) {
+  if (!teams.length) {
     return <Redirect to="/create-team" />;
   }
-
-  const teams = [...allTeams, ...inviteTeams];
 
   // check if teamId in query string in an integer
   if (!parseInt(teamId, 10) && teamId) {
@@ -67,4 +68,4 @@ const ViewTeam = ({
   );
 };
 
-export default graphql(allTeamsQuery)(ViewTeam);
+export default graphql(meQuery)(ViewTeam);
