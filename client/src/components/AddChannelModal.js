@@ -2,7 +2,7 @@ import React from 'react';
 import { Form, Modal, Input } from 'semantic-ui-react';
 import { withFormik } from 'formik';
 import { compose, graphql } from 'react-apollo';
-import { createChannelMutation, allTeamsQuery } from '../graphql/team';
+import { createChannelMutation, meQuery } from '../graphql/team';
 
 const AddChannelModal = ({
   open,
@@ -83,13 +83,13 @@ export default compose(
           },
         ) => {
           if (ok) {
-            const data = proxy.readQuery({ query: allTeamsQuery });
-            const currentTeam = data.allTeams.indexOf(
-              data.allTeams.find(team => team.id === teamId),
+            const data = proxy.readQuery({ query: meQuery });
+            const currentTeam = data.me.teams.indexOf(
+              data.me.teams.find(team => team.id === teamId),
             );
-            data.allTeams[currentTeam].channels.push(channel);
+            data.me.teams[currentTeam].channels.push(channel);
             proxy.writeQuery({
-              query: allTeamsQuery,
+              query: meQuery,
               data,
             });
           }

@@ -2,31 +2,21 @@ import formatErrors from '../../helpers/formatErrors';
 import { requiresAuth } from '../../auth/permissions';
 
 export default {
-  Query: {
-    // eslint-disable-next-line max-len
-    allTeams: requiresAuth.createResolver(
-      // eslint-disable-next-line max-len
-      async (parent, args, { models, user }) => models.Team.findAll({ where: { owner: user.id } }, { raw: true }),
-    ),
-    inviteTeams: requiresAuth.createResolver(
-      async (parent, args, { models, user }) => models.sequelize.query(
-        'select * from teams t join members m on t.id = m.team_id where m.user_id = ?', {
-          replacements: [user.id],
-          model: models.Team,
-        },
-      ),
-    ),
-  },
   Mutation: {
     createTeam: requiresAuth.createResolver(
       async (parent, args, { models, user }) => {
         try {
           const response = await models.sequelize.transaction(async () => {
-            const team = await models.Team.create({ ...args, owner: user.id });
+            const team = await models.Team.create({ ...args });
             await models.Channel.create({
               name: 'general',
               public: true,
               teamId: team.id,
+            });
+            await models.Member.create({
+              teamId: team.id,
+              userId: user.id,
+              admin: true,
             });
             return team;
           });
