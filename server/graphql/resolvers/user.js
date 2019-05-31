@@ -10,12 +10,13 @@ export default {
         {
           replacements: [user.id],
           model: models.Team,
+          raw: true,
         },
       ),
   },
   Query: {
-    allUsers: (parent, { id }, { models }) =>
-      models.User.findOne({ where: { id } }),
+    allUsers: (parent, args, { models }) =>
+      models.User.findAll(),
     me: requiresAuth.createResolver((parent, args, { models, user }) =>
       models.User.findOne({ where: { id: user.id } })),
     login: (parent, { email, password }, { models, SECRET, SECRET2 }) =>

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import decode from 'jwt-decode';
 import Teams from '../components/Teams';
 import Channels from '../components/Channels';
 import AddChannelModal from '../components/AddChannelModal';
@@ -32,33 +31,21 @@ class Sidebar extends Component {
   };
 
   render() {
-    const { teams, team } = this.props;
+    const { teams, team, username } = this.props;
 
     const { addChannelModalVisible, addPeopleModalVisible } = this.state;
 
     const { handleAddChannelClick, handleAddUsersClick } = this;
 
-    let username = '';
-    let id = '';
-
-    try {
-      const token = localStorage.getItem('token');
-      const { user } = decode(token);
-      ({ username } = user);
-      ({ id } = user);
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.log(err);
-    }
     return (
       <>
         <Teams teams={teams} />
         <Channels
           teamName={team.name}
           username={username}
-          isOwner={id === team.owner}
+          isOwner={team.admin}
           channels={team.channels}
-          owner={team.owner}
+          owner={team.admin}
           teamId={team.id}
           users={[{ id: 1, name: 'slackbot' }, { id: 1, name: 'Bob' }]}
           onAddChannelClick={handleAddChannelClick}
