@@ -10,12 +10,31 @@ const createResolver = (resolver) => {
   return baseResolver;
 };
 
-const requiresAuth = createResolver((parent, args, { user }) => {
+export const requiresAuth = createResolver((parent, args, { user }) => {
   if (!user || !user.id) {
     throw new Error('Not authenticated');
   }
 });
 
-module.exports = {
-  requiresAuth,
-};
+export const requiresTeamAccess = createResolver(
+  async (parent, { channelId }, { user, models }) => {
+    if (!user || !user.id) {
+      throw new Error('Not authenticated');
+    }
+    // check if part of the team
+    const channel = await models.Channel.findOne({
+      where: { id: channelId },
+    });
+    const member = await models.Member.findOne({
+      where: {
+        teamId: channel.teamId,
+        userId: user.id,
+      },
+    });
+    if (!member) {
+      throw new Error(
+        'You have to be a member of the team to receive new messages',
+      );
+    }
+  },
+);
