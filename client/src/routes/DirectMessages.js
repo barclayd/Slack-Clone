@@ -1,5 +1,5 @@
 import React from 'react';
-import { compose, graphql } from 'react-apollo';
+import { graphql, compose } from 'react-apollo';
 import { Redirect } from 'react-router-dom';
 import { Layout } from '../components/MainLayout';
 import Sidebar from '../containers/Sidebar';
@@ -9,11 +9,11 @@ import SendMessage from '../components/SendMessage';
 import { meQuery } from '../graphql/team';
 import { createMessageMutation } from '../graphql/message';
 
+
 const ViewTeam = ({
-  mutate,
   data: { loading, me },
   match: {
-    params: { teamId, channelId },
+    params: { teamId, userId },
   },
 }) => {
   if (loading) {
@@ -32,9 +32,6 @@ const ViewTeam = ({
     return <Redirect to="/view-team" />;
   }
   // check if channelId in query string in an integer
-  if (!parseInt(channelId, 10) && channelId) {
-    return <Redirect to={`/view-team/${teamId}`} />;
-  }
 
   const identifySelected = (item, arr) =>
     (parseInt(item, 10)
@@ -46,20 +43,7 @@ const ViewTeam = ({
   if (!team) {
     return <Redirect to="/view-team" />;
   }
-  const channel = identifySelected(channelId, team.channels);
   // check if channel in query string in valid
-  if (!channel) {
-    return <Redirect to={`/view-team/${teamId}`} />;
-  }
-
-  const sendMessage = text =>
-    mutate({
-      variables: {
-        text,
-        channelId: parseInt(channel.id, 10),
-      },
-    });
-
   return (
     <Layout>
       <Sidebar
@@ -71,9 +55,12 @@ const ViewTeam = ({
           letter: t.name[0].toUpperCase(),
         }))}
       />
-      <Header channelName={channel.name} />
-      <MessageContainer channelId={parseInt(channel.id, 10)} />
-      <SendMessage placeholder={channel.name} onSubmit={sendMessage} />
+      {/* <Header channelName={channel.name} /> */}
+      {/* <MessageContainer channelId={parseInt(channel.id, 10)} /> */}
+      <SendMessage
+        onSubmit={() => {}}
+        placeholder={userId}
+      />
     </Layout>
   );
 };
