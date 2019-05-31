@@ -49,7 +49,7 @@ export default {
             memberPromise,
             userToAddPromise,
           ]);
-          if (member.dataValues.admin) {
+          if (!member.dataValues.admin) {
             return {
               ok: false,
               errors: [

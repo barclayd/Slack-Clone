@@ -29,7 +29,7 @@ const ViewTeam = ({
   if (!parseInt(teamId, 10) && teamId) {
     return <Redirect to="/view-team" />;
   }
-  // check if channeldId in query string in an integer
+  // check if channelId in query string in an integer
   if (!parseInt(channelId, 10) && channelId) {
     return <Redirect to={`/view-team/${teamId}`} />;
   }
