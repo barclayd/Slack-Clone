@@ -18,7 +18,7 @@ const ViewTeam = ({
     return null;
   }
 
-  const { teams } = me;
+  const { username, teams } = me;
 
   // check if logged in user has any teams
   if (!teams.length) {
@@ -34,9 +34,10 @@ const ViewTeam = ({
     return <Redirect to={`/view-team/${teamId}`} />;
   }
 
-  const identifySelected = (item, arr) => (parseInt(item, 10)
-    ? arr.filter(a => parseInt(a.id, 10) === parseInt(item, 10))[0]
-    : arr[0]);
+  const identifySelected = (item, arr) =>
+    (parseInt(item, 10)
+      ? arr.filter(a => parseInt(a.id, 10) === parseInt(item, 10))[0]
+      : arr[0]);
 
   const team = identifySelected(teamId, teams);
   // check if teamId in query string in valid
@@ -53,6 +54,7 @@ const ViewTeam = ({
       <Sidebar
         allTeams={teams}
         team={team}
+        username={username}
         teams={teams.map(t => ({
           id: t.id,
           letter: t.name[0].toUpperCase(),
@@ -68,4 +70,8 @@ const ViewTeam = ({
   );
 };
 
-export default graphql(meQuery)(ViewTeam);
+export default graphql(meQuery, {
+  options: {
+    fetchPolicy: 'network-only',
+  },
+})(ViewTeam);
