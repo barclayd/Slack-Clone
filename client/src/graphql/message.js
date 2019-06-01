@@ -6,6 +6,12 @@ export const createMessageMutation = gql`
   }
 `;
 
+export const createDirectMessageMutation = gql`
+  mutation($receiverId: Int!, $text: String!) {
+    createDirectMessage(receiverId: $receiverId, text: $text)
+  }
+`;
+
 export const messagesQuery = gql`
   query($channelId: Int!) {
     messages(channelId: $channelId) {

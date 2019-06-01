@@ -3,14 +3,14 @@ import { graphql, compose } from 'react-apollo';
 import { Redirect } from 'react-router-dom';
 import { Layout } from '../components/MainLayout';
 import Sidebar from '../containers/Sidebar';
-import Header from '../components/Header';
-import MessageContainer from '../containers/MessageContainer';
+// import Header from '../components/Header';
+// import MessageContainer from '../containers/MessageContainer';
 import SendMessage from '../components/SendMessage';
 import { meQuery } from '../graphql/team';
-import { createMessageMutation } from '../graphql/message';
-
+import { createDirectMessageMutation } from '../graphql/message';
 
 const ViewTeam = ({
+  mutate,
   data: { loading, me },
   match: {
     params: { teamId, userId },
@@ -43,7 +43,15 @@ const ViewTeam = ({
   if (!team) {
     return <Redirect to="/view-team" />;
   }
-  // check if channel in query string in valid
+
+  const sendMessage = text =>
+    mutate({
+      variables: {
+        text,
+        receiverId: parseInt(userId, 10),
+      },
+    });
+
   return (
     <Layout>
       <Sidebar
@@ -57,10 +65,7 @@ const ViewTeam = ({
       />
       {/* <Header channelName={channel.name} /> */}
       {/* <MessageContainer channelId={parseInt(channel.id, 10)} /> */}
-      <SendMessage
-        onSubmit={() => {}}
-        placeholder={userId}
-      />
+      <SendMessage onSubmit={sendMessage} placeholder={userId} />
     </Layout>
   );
 };
@@ -71,5 +76,5 @@ export default compose(
       fetchPolicy: 'network-only',
     },
   }),
-  graphql(createMessageMutation),
+  graphql(createDirectMessageMutation),
 )(ViewTeam);
