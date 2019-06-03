@@ -3,8 +3,8 @@ import { graphql, compose } from 'react-apollo';
 import { Redirect } from 'react-router-dom';
 import { Layout } from '../components/MainLayout';
 import Sidebar from '../containers/Sidebar';
-// import Header from '../components/Header';
-// import MessageContainer from '../containers/MessageContainer';
+import Header from '../components/Header';
+import DirectMessageContainer from '../containers/DirectMessageContainer';
 import SendMessage from '../components/SendMessage';
 import { meQuery } from '../graphql/team';
 import { createDirectMessageMutation } from '../graphql/message';
@@ -63,8 +63,8 @@ const ViewTeam = ({
           letter: t.name[0].toUpperCase(),
         }))}
       />
-      {/* <Header channelName={channel.name} /> */}
-      {/* <MessageContainer channelId={parseInt(channel.id, 10)} /> */}
+      <Header channelName={"Someone's user name"} />
+      <DirectMessageContainer teamId={teamId} />
       <SendMessage onSubmit={sendMessage} placeholder={userId} />
     </Layout>
   );

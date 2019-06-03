@@ -25,6 +25,19 @@ export const messagesQuery = gql`
   }
 `;
 
+export const directMessagesQuery = gql`
+  query($teamId: Int!) {
+    directMessages(teamId: $teamId) {
+      text
+      id
+      sender {
+        username
+      }
+      createdAt
+    }
+  }
+`;
+
 export const newChannelMessageSubscription = gql`
   subscription($channelId: Int!) {
     newChannelMessage(channelId: $channelId) {
