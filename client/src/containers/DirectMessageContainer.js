@@ -73,12 +73,12 @@ class DirectMessageContainer extends Component {
 
   render() {
     const {
-      data: { loading, messages },
+      data: { loading, directMessages },
     } = this.props;
     return loading ? null : (
       <Messages>
         <Comment.Group>
-          {messages.map(m => (
+          {directMessages.map(m => (
             <Comment key={`${m.id}-direct-message`}>
               <Comment.Content>
                 <Comment.Author as="a">{m.sender.username}</Comment.Author>
@@ -103,7 +103,7 @@ class DirectMessageContainer extends Component {
 }
 
 export default graphql(directMessagesQuery, {
-  variables: props => ({ temId: props.teamId }),
+  variables: props => ({ teamId: props.teamId, userId: props.userId }),
   options: {
     fetchPolicy: 'network-only',
   },
