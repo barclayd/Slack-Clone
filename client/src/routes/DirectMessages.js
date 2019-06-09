@@ -64,7 +64,10 @@ const ViewTeam = ({
         }))}
       />
       <Header channelName={"Someone's user name"} />
-      <DirectMessageContainer teamId={teamId} />
+      <DirectMessageContainer
+        teamId={parseInt(teamId, 10)}
+        userId={parseInt(userId, 10)}
+      />
       <SendMessage onSubmit={sendMessage} placeholder={userId} />
     </Layout>
   );

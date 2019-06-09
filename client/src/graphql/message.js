@@ -26,8 +26,8 @@ export const messagesQuery = gql`
 `;
 
 export const directMessagesQuery = gql`
-  query($teamId: Int!) {
-    directMessages(teamId: $teamId) {
+  query($teamId: Int!, $userId: Int!) {
+    directMessages(teamId: $teamId, userId: $userId) {
       text
       id
       sender {
