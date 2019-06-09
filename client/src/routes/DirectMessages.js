@@ -44,13 +44,15 @@ const ViewTeam = ({
     return <Redirect to="/view-team" />;
   }
 
-  const sendMessage = text =>
-    mutate({
+  const sendMessage = async (text) => {
+    await mutate({
       variables: {
         text,
         receiverId: parseInt(userId, 10),
+        teamId: parseInt(teamId, 10),
       },
     });
+  };
 
   return (
     <Layout>

@@ -7,8 +7,8 @@ export const createMessageMutation = gql`
 `;
 
 export const createDirectMessageMutation = gql`
-  mutation($receiverId: Int!, $text: String!) {
-    createDirectMessage(receiverId: $receiverId, text: $text)
+  mutation($receiverId: Int!, $text: String!, $teamId: Int!) {
+    createDirectMessage(receiverId: $receiverId, text: $text, teamId: $teamId)
   }
 `;
 
