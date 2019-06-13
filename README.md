@@ -8,9 +8,9 @@ Slack clone built using React.js, Node.js and GraphQL.
 - [x] Create Teams
 - [x] Add new channels
 - [x] Add new members to teams
-- [x] Drag and drop files for upload
 - [x] Instant messaging with the use of GraphQL subscriptions as an implementation of web sockets
 - [x] Fully authenticated
+- [x] Sending of direct messages
 
 ### How to Run
 
@@ -29,4 +29,4 @@ $ npm run start
 ### Future improvements
 
 * Member of channel is typing
-* Direct messages
+* Drag and drop files for upload
