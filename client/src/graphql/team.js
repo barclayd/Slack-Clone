@@ -2,20 +2,20 @@ import gql from 'graphql-tag';
 
 export const meQuery = gql`
   {
-  me {
-    username
-    id
-    teams {
-      name
+    me {
+      username
       id
-      admin
-      channels {
-        id
+      teams {
         name
+        id
+        admin
+        channels {
+          id
+          name
+        }
       }
     }
   }
-}
 `;
 
 export const createChannelMutation = gql`
@@ -38,6 +38,15 @@ export const addTeamMemberMutation = gql`
         path
         message
       }
+    }
+  }
+`;
+
+export const getTeamMembersQuery = gql`
+  query($teamId: Int!) {
+    getTeamMembers(teamId: $teamId) {
+      id
+      username
     }
   }
 `;
