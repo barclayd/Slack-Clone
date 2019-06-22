@@ -3,11 +3,13 @@ import Teams from '../components/Teams';
 import Channels from '../components/Channels';
 import AddChannelModal from '../components/AddChannelModal';
 import AddPeopleModal from '../components/AddPeopleModal';
+import DirectMessageModal from '../components/DirectMessageModal';
 
 class Sidebar extends Component {
   state = {
     addChannelModalVisible: false,
     addPeopleModalVisible: false,
+    openDirectMessageModal: false,
   };
 
   handleAddChannelClick = (e) => {
@@ -17,6 +19,16 @@ class Sidebar extends Component {
     this.setState(prevState => ({
       ...prevState,
       addChannelModalVisible: !prevState.addChannelModalVisible,
+    }));
+  };
+
+  handleDirectMessageClick = (e) => {
+    if (e) {
+      e.preventDefault();
+    }
+    this.setState(prevState => ({
+      ...prevState,
+      openDirectMessageModal: !prevState.openDirectMessageModal,
     }));
   };
 
@@ -33,9 +45,17 @@ class Sidebar extends Component {
   render() {
     const { teams, team, username } = this.props;
 
-    const { addChannelModalVisible, addPeopleModalVisible } = this.state;
+    const {
+      addChannelModalVisible,
+      addPeopleModalVisible,
+      openDirectMessageModal,
+    } = this.state;
 
-    const { handleAddChannelClick, handleAddUsersClick } = this;
+    const {
+      handleAddChannelClick,
+      handleAddUsersClick,
+      handleDirectMessageClick,
+    } = this;
 
     return (
       <>
@@ -50,12 +70,19 @@ class Sidebar extends Component {
           users={[{ id: 1, name: 'slackbot' }, { id: 1, name: 'Bob' }]}
           onAddChannelClick={handleAddChannelClick}
           onAddUsersClick={handleAddUsersClick}
+          onDirectMessageClick={handleDirectMessageClick}
         />
         <AddChannelModal
           teamId={parseInt(team.id, 10)}
           toggle={handleAddChannelClick}
           open={addChannelModalVisible}
           key="sidebar-add-channel-modal"
+        />
+        <DirectMessageModal
+          teamId={parseInt(team.id, 10)}
+          toggle={handleDirectMessageClick}
+          open={openDirectMessageModal}
+          key="sidebar-direct-message-modal"
         />
         <AddPeopleModal
           teamId={parseInt(team.id, 10)}

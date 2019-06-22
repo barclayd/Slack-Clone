@@ -21,7 +21,7 @@ const TeamNameHeader = styled.h1`
 const SideBarList = styled.ul`
   width: 100%;
   list-style: none;
-  padding-left: 0px;
+  padding-left: 0;
 `;
 
 const SideBarListItem = styled.li`
@@ -75,6 +75,7 @@ export default ({
   onAddUsersClick,
   teamId,
   isOwner,
+  onDirectMessageClick,
 }) => (
   <ChannelWrapper>
     <PushLeft>
@@ -98,7 +99,14 @@ export default ({
     </div>
     <div>
       <SideBarList>
-        <SideBarHeaderList>Direct Messages</SideBarHeaderList>
+        <SideBarHeaderList>
+          Direct Messages
+          <Icon
+            onClick={onDirectMessageClick}
+            style={{ cursor: 'pointer' }}
+            name="add circle"
+          />
+        </SideBarHeaderList>
         {users.map(user)}
       </SideBarList>
     </div>
