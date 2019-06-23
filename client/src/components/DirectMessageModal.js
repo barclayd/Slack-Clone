@@ -2,11 +2,14 @@ import React from 'react';
 import Downshift from 'downshift';
 import { Form, Modal, Input } from 'semantic-ui-react';
 import { graphql } from 'react-apollo';
+import { withRouter } from 'react-router-dom';
 import { getTeamMembersQuery } from '../graphql/team';
 
 const DirectMessageModal = ({
   open,
   toggle,
+  teamId,
+  history,
   data: { loading, getTeamMembers },
 }) => (
   <Modal open={open} closeIcon onClose={toggle}>
@@ -16,7 +19,9 @@ const DirectMessageModal = ({
         <Form.Field>
           {!loading && (
             <Downshift
-              onChange={selection => console.log(selection.username)}
+              onChange={selectedUser =>
+                history.push(`/view-team/user/${teamId}/${selectedUser.id}`)
+              }
               itemToString={item => (item ? item.username : '')}
             >
               {({
@@ -80,4 +85,4 @@ const DirectMessageModal = ({
   </Modal>
 );
 
-export default graphql(getTeamMembersQuery)(DirectMessageModal);
+export default withRouter(graphql(getTeamMembersQuery)(DirectMessageModal));
