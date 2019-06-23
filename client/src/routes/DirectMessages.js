@@ -65,7 +65,7 @@ const ViewTeam = ({
           letter: t.name[0].toUpperCase(),
         }))}
       />
-      <Header channelName={"Someone's user name"} />
+      <Header channelName={`${userId}`} />
       <DirectMessageContainer
         teamId={parseInt(teamId, 10)}
         userId={parseInt(userId, 10)}

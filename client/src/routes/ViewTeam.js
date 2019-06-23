@@ -52,8 +52,6 @@ const ViewTeam = ({
     return <Redirect to={`/view-team/${teamId}`} />;
   }
 
-  console.log(team.directMessageMembers);
-
   const sendMessage = text =>
     mutate({
       variables: {

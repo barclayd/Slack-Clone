@@ -60,10 +60,15 @@ const AddNewUsers = styled.div`
   cursor: pointer;
 `;
 
-const user = ({ id, name }) => (
-  <SideBarListItem key={`user-${id + name}`}>
-    <Bubble /> {name}
-  </SideBarListItem>
+const user = ({ id, username }, teamId) => (
+  <Link
+    to={`/view-team/user/${parseInt(teamId, 10)}/${id}`}
+    key={`user-${id + username}`}
+  >
+    <SideBarListItem>
+      <Bubble /> {username}
+    </SideBarListItem>
+  </Link>
 );
 
 export default ({
@@ -107,7 +112,7 @@ export default ({
             name="add circle"
           />
         </SideBarHeaderList>
-        {users.map(user)}
+        {users.map(u => user(u, teamId))}
       </SideBarList>
     </div>
     {isOwner && (
