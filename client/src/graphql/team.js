@@ -9,6 +9,10 @@ export const meQuery = gql`
         name
         id
         admin
+        directMessageMembers {
+            id
+            username
+        }
         channels {
           id
           name
