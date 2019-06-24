@@ -51,6 +51,29 @@ const ViewTeam = ({
         receiverId: parseInt(userId, 10),
         teamId: parseInt(teamId, 10),
       },
+      optimisticResponse: true,
+      update: (proxy) => {
+        const data = proxy.readQuery({ query: meQuery });
+        const currentTeam = data.me.teams.indexOf(
+          data.me.teams.find(t => t.id === team.id),
+        );
+        const userNotInDirectMessageMembersList = data.me.teams[
+          currentTeam
+        ].directMessageMembers.every(
+          member => member.id !== parseInt(userId, 10),
+        );
+        if (userNotInDirectMessageMembersList) {
+          data.me.teams[currentTeam].directMessageMembers.push({
+            __typename: 'User',
+            id: userId,
+            username: 'someone',
+          });
+          proxy.writeQuery({
+            query: meQuery,
+            data,
+          });
+        }
+      },
     });
   };
 
@@ -67,7 +90,7 @@ const ViewTeam = ({
       />
       <Header channelName={`${userId}`} />
       <DirectMessageContainer
-        teamId={parseInt(teamId, 10)}
+        teamId={parseInt(team.id, 10)}
         userId={parseInt(userId, 10)}
       />
       <SendMessage onSubmit={sendMessage} placeholder={userId} />
