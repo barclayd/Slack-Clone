@@ -6,12 +6,12 @@ import Sidebar from '../containers/Sidebar';
 import Header from '../components/Header';
 import DirectMessageContainer from '../containers/DirectMessageContainer';
 import SendMessage from '../components/SendMessage';
-import { meQuery } from '../graphql/team';
+import { directMessageMeQuery, meQuery } from '../graphql/team';
 import { createDirectMessageMutation } from '../graphql/message';
 
 const ViewTeam = ({
   mutate,
-  data: { loading, me },
+  data: { loading, me, getUser },
   match: {
     params: { teamId, userId },
   },
@@ -51,7 +51,9 @@ const ViewTeam = ({
         receiverId: parseInt(userId, 10),
         teamId: parseInt(teamId, 10),
       },
-      optimisticResponse: true,
+      optimisticResponse: {
+        createDirectMessageMutation: true,
+      },
       update: (proxy) => {
         const data = proxy.readQuery({ query: meQuery });
         const currentTeam = data.me.teams.indexOf(
@@ -66,7 +68,7 @@ const ViewTeam = ({
           data.me.teams[currentTeam].directMessageMembers.push({
             __typename: 'User',
             id: userId,
-            username: 'someone',
+            username: getUser.username,
           });
           proxy.writeQuery({
             query: meQuery,
@@ -88,7 +90,7 @@ const ViewTeam = ({
           letter: t.name[0].toUpperCase(),
         }))}
       />
-      <Header channelName={`${userId}`} />
+      <Header channelName={`${getUser.username}`} />
       <DirectMessageContainer
         teamId={parseInt(team.id, 10)}
         userId={parseInt(userId, 10)}
@@ -99,10 +101,13 @@ const ViewTeam = ({
 };
 
 export default compose(
-  graphql(meQuery, {
-    options: {
+  graphql(directMessageMeQuery, {
+    options: props => ({
+      variables: {
+        userId: parseInt(props.match.params.userId, 10),
+      },
       fetchPolicy: 'network-only',
-    },
+    }),
   }),
   graphql(createDirectMessageMutation),
 )(ViewTeam);
