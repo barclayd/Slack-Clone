@@ -15,8 +15,9 @@ export default {
       ),
   },
   Query: {
-    allUsers: (parent, args, { models }) =>
-      models.User.findAll(),
+    allUsers: (parent, args, { models }) => models.User.findAll(),
+    getUser: (parent, { userId }, { models }) =>
+      models.User.findOne({ where: { id: userId } }),
     me: requiresAuth.createResolver((parent, args, { models, user }) =>
       models.User.findOne({ where: { id: user.id } })),
     login: (parent, { email, password }, { models, SECRET, SECRET2 }) =>

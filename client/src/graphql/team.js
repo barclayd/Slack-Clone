@@ -10,8 +10,33 @@ export const meQuery = gql`
         id
         admin
         directMessageMembers {
-            id
-            username
+          id
+          username
+        }
+        channels {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
+
+export const directMessageMeQuery = gql`
+  query($userId: Int) {
+    getUser(userId: $userId) {
+      username
+    }
+    me {
+      username
+      id
+      teams {
+        name
+        id
+        admin
+        directMessageMembers {
+          id
+          username
         }
         channels {
           id
