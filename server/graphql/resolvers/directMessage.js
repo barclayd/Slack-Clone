@@ -1,4 +1,8 @@
-import { requiresAuth } from '../../auth/permissions';
+import { withFilter } from 'graphql-subscriptions';
+import { requiresAuth, directMessageAccess } from '../../auth/permissions';
+import pubSub from '../../pubsub';
+
+const NEW_DIRECT_MESSAGE = 'NEW_DIRECT_MESSAGE';
 
 export default {
   DirectMessage: {
@@ -53,5 +57,20 @@ export default {
         }
       },
     ),
+  },
+  Subscription: {
+    newDirectMessage: {
+      subscribe: directMessageAccess.createResolver(
+        withFilter(
+          () => pubSub.asyncIterator('NEW_DIRECT_MESSAGE'),
+          (payload, { teamId, userId }, { user }) =>
+            parseInt(payload.teamId, 10) === parseInt(teamId, 10)
+            && ((parseInt(payload.senderId, 10) === parseInt(user.id, 10)
+              && payload.receiverId === userId)
+              || (parseInt(payload.senderId, 10) === parseInt(userId, 10)
+                && payload.senderId === user.id)),
+        ),
+      ),
+    },
   },
 };
