@@ -45,14 +45,15 @@ export const directMessageAccess = createResolver(
       throw new Error('Not authenticated');
     }
     // check if both users are part of the team
+    console.log(userId, user.id);
     const members = await models.Member.findAll({
       where: {
         teamId,
         [models.Sequelize.Op.or]: [{ userId }, { userId: user.id }],
       },
     });
-
-    if (members.length < 2) {
+    console.log(members.length);
+    if (members.length !== 2) {
       throw new Error(
         'Both users in the chat have to be part of the team to subscribe to new direct messages',
       );
