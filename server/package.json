@@ -4,6 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "setup": "./setup.sh",
     "start": "nodemon -r esm app.js",
     "start:test:server": "TEST_DB=testslack node -r esm app.js",
     "start:test": "./start_test_server.sh",
