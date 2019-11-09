@@ -13,26 +13,43 @@ describe('User Resolvers', () => {
         }
       `,
     });
-    const { data } = response;
+    const {
+      data: { data },
+    } = response;
     expect(data).toMatchObject({
-      data: {
-        allUsers: [
-          {
-            id: 1,
-            email: 't@t.com',
-            username: 'test',
-          },
-          {
-            id: 2,
-            email: 't1@t.com',
-            username: 'test2',
-          },
-          {
-            id: 3,
-            email: 't2@t.com',
-            username: 'tester2',
-          },
-        ],
+      allUsers: [],
+    });
+  });
+
+  it('registers a new user', async () => {
+    const response = await axios.post('http://localhost:4000/graphql', {
+      query: `
+        mutation {
+          register(username: "test", email: "t@t.com", password: "testing") {
+            ok
+            errors {
+              path
+              message
+            }
+            user {
+              username
+              email
+            }
+          }
+        }
+      `,
+    });
+    const {
+      data: { data },
+    } = response;
+    expect(data).toMatchObject({
+      register: {
+        ok: true,
+        errors: null,
+        user: {
+          username: 'test',
+          email: 't@t.com',
+        },
       },
     });
   });

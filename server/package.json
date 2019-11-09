@@ -5,6 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon -r esm app.js",
+    "start:test:server": "TEST_DB=testslack nodemon -r esm app.js",
+    "start:test": "./start_test_server.sh",
     "test": "jest"
   },
   "author": "",

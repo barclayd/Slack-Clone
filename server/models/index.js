@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize';
 
-const sequelize = new Sequelize('slack', 'barcld01', '', {
+const sequelize = new Sequelize(process.env.TEST_DB || 'slack', 'barcld01', '', {
   dialect: 'postgres',
   define: {
     underscored: true,
