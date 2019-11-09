@@ -53,4 +53,83 @@ describe('User Resolvers', () => {
       },
     });
   });
+  it('successfully logs in a registered user', async () => {
+    const response = await axios.post('http://localhost:4000/graphql', {
+      query: `
+        query {
+          login(email:"t@t.com", password:"testing") {
+            ok
+          }
+        }
+      `,
+    });
+    const {
+      data: { data },
+    } = response;
+    expect(data).toMatchObject({
+      login: {
+        ok: true,
+      },
+    });
+  });
+  it('allows a user to create a new team', async () => {
+    const loginResponse = await axios.post('http://localhost:4000/graphql', {
+      query: `
+        query {
+          login(email:"t@t.com", password:"testing") {
+            ok
+            token
+            refreshToken
+          }
+        }
+      `,
+    });
+    const {
+      data: {
+        data: {
+          login: { token, refreshToken },
+        },
+      },
+    } = loginResponse;
+    const createTeamResponse = await axios.post(
+      'http://localhost:4000/graphql',
+      {
+        query: `
+        mutation {
+          createTeam(name:"test") {
+            ok
+            team {
+              name
+              channels {
+                name
+              }
+            }
+          }
+        }
+      `,
+      },
+      {
+        headers: {
+          'x-token': token,
+          'x-refresh-token': refreshToken,
+        },
+      },
+    );
+    const {
+      data: { data },
+    } = createTeamResponse;
+    expect(data).toMatchObject({
+      createTeam: {
+        ok: true,
+        team: {
+          name: 'test',
+          channels: [
+            {
+              name: 'general',
+            },
+          ],
+        },
+      },
+    });
+  });
 });
