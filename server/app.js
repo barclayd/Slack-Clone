@@ -24,6 +24,7 @@ const schema = makeExecutableSchema({
   resolvers,
 });
 
+
 const addUser = async (req, res, next) => {
   const token = req.headers['x-token'];
   if (token) {
@@ -67,6 +68,12 @@ const server = new ApolloServer({
 });
 
 server.applyMiddleware({ app });
+
+
+app.get('/', (req, res) => {
+  res.send('Apollo launched!');
+});
+
 
 app.use('/images', express.static(path.join(__dirname, './images')));
 // sync models with postgres before running server

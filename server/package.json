@@ -5,9 +5,9 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon -r esm app.js",
-    "start:test:server": "TEST_DB=testslack nodemon -r esm app.js",
+    "start:test:server": "TEST_DB=testslack node -r esm app.js",
     "start:test": "./start_test_server.sh",
-    "test": "jest"
+    "test": "start-server-and-test start:test 4000 jest"
   },
   "author": "",
   "license": "ISC",
@@ -26,7 +26,8 @@
     "eslint-plugin-import": "^2.17.2",
     "eslint-plugin-jest": "^23.0.3",
     "jest": "^24.9.0",
-    "nodemon": "^1.18.11"
+    "nodemon": "^1.18.11",
+    "start-server-and-test": "^1.10.6"
   },
   "dependencies": {
     "@babel/runtime": "^7.7.2",
