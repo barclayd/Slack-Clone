@@ -1,6 +1,10 @@
 module.exports = {
-    "extends": "airbnb-base",
-    rules: {
-        'implicit-arrow-linebreak': 0,
-    },
+  extends: ['airbnb-base', 'plugin:jest/recommended'],
+  rules: {
+    'implicit-arrow-linebreak': 0,
+  },
+  plugins: ['jest'],
+  env: {
+    'jest/globals': true,
+  },
 };
