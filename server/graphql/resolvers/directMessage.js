@@ -51,6 +51,16 @@ export default {
             senderId: user.id,
           });
 
+          await pubSub.publish(NEW_DIRECT_MESSAGE, {
+            channelId: args.channelId,
+            newDirectMessage: {
+              ...directMessage.dataValues,
+              sender: {
+                username: user.username,
+              },
+            },
+          });
+
           return true;
         } catch (err) {
           return false;
@@ -62,7 +72,7 @@ export default {
     newDirectMessage: {
       subscribe: directMessageAccess.createResolver(
         withFilter(
-          () => pubSub.asyncIterator('NEW_DIRECT_MESSAGE'),
+          () => pubSub.asyncIterator(NEW_DIRECT_MESSAGE),
           (payload, { teamId, userId }, { user }) =>
             parseInt(payload.teamId, 10) === parseInt(teamId, 10)
             && ((parseInt(payload.senderId, 10) === parseInt(user.id, 10)
