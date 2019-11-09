@@ -39,20 +39,19 @@ export const requiresTeamAccess = createResolver(
   },
 );
 
-export const directMessageAccess = createResolver(
-  async (parent, { teamId, userId }, { user, models }) => {
+export const directMessageSubscription = createResolver(
+  async (parent, args, { user, models }) => {
+    const { teamId, userId } = args;
     if (!user || !user.id) {
       throw new Error('Not authenticated');
     }
     // check if both users are part of the team
-    console.log(userId, user.id);
     const members = await models.Member.findAll({
       where: {
         teamId,
         [models.Sequelize.Op.or]: [{ userId }, { userId: user.id }],
       },
     });
-    console.log(members.length);
     if (members.length !== 2) {
       throw new Error(
         'Both users in the chat have to be part of the team to subscribe to new direct messages',

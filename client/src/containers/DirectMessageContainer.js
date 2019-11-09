@@ -19,7 +19,7 @@ class DirectMessageContainer extends Component {
       if (this.unsubscribe) {
         this.unsubscribe();
       }
-      this.unsubscribe = this.subscribe(userId, teamId);
+      this.unsubscribe = this.subscribe(teamId, userId);
     }
   }
 
@@ -29,15 +29,15 @@ class DirectMessageContainer extends Component {
     }
   }
 
-  subscribe = (userId, teamId) => {
+  subscribe = (teamId, userId) => {
     const {
       data: { subscribeToMore },
     } = this.props;
     return subscribeToMore({
       document: newDirectMessageSubscription,
       variables: {
-        userId,
         teamId,
+        userId,
       },
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData) {
