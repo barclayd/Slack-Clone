@@ -53,6 +53,7 @@ describe('User Resolvers', () => {
       },
     });
   });
+
   it('successfully logs in a registered user', async () => {
     const response = await axios.post('http://localhost:4000/graphql', {
       query: `
@@ -72,6 +73,7 @@ describe('User Resolvers', () => {
       },
     });
   });
+
   it('allows a user to create a new team', async () => {
     const loginResponse = await axios.post('http://localhost:4000/graphql', {
       query: `
