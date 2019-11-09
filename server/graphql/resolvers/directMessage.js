@@ -1,5 +1,8 @@
 import { withFilter } from 'graphql-subscriptions';
-import { requiresAuth, directMessageAccess } from '../../auth/permissions';
+import {
+  requiresAuth,
+  directMessageSubscription,
+} from '../../auth/permissions';
 import pubSub from '../../pubsub';
 
 const NEW_DIRECT_MESSAGE = 'NEW_DIRECT_MESSAGE';
@@ -50,6 +53,17 @@ export default {
             ...args,
             senderId: user.id,
           });
+          await pubSub.publish(NEW_DIRECT_MESSAGE, {
+            teamId: args.teamId,
+            senderId: user.id,
+            receiverId: args.receiverId,
+            newDirectMessage: {
+              ...directMessage.dataValues,
+              sender: {
+                username: user.username,
+              },
+            },
+          });
 
           return true;
         } catch (err) {
@@ -60,15 +74,15 @@ export default {
   },
   Subscription: {
     newDirectMessage: {
-      subscribe: directMessageAccess.createResolver(
+      subscribe: directMessageSubscription.createResolver(
         withFilter(
-          () => pubSub.asyncIterator('NEW_DIRECT_MESSAGE'),
-          (payload, { teamId, userId }, { user }) =>
-            parseInt(payload.teamId, 10) === parseInt(teamId, 10)
-            && ((parseInt(payload.senderId, 10) === parseInt(user.id, 10)
-              && payload.receiverId === userId)
-              || (parseInt(payload.senderId, 10) === parseInt(userId, 10)
-                && payload.senderId === user.id)),
+          () => pubSub.asyncIterator(NEW_DIRECT_MESSAGE),
+          (payload, args, { user }) =>
+            payload.teamId === args.teamId
+            && ((payload.senderId === user.id
+              && payload.receiverId === args.userId)
+              || (payload.senderId === args.userId
+                && payload.receiverId === user.id)),
         ),
       ),
     },
