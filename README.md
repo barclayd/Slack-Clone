@@ -38,7 +38,7 @@ To verify you have Postgres installed correctly, running the following command:
 psql
 ```
 
-should look similar to:
+should produce an output in the terminal that looks similar to this:
 
 ```shell script
 $ psql
