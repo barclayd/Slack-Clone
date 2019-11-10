@@ -66,11 +66,19 @@ class DirectMessageContainer extends Component {
               <Comment.Content>
                 <Comment.Author as="a">{m.sender.username}</Comment.Author>
                 <Comment.Metadata>
-                  <div>
+                  <>
+                    {new Date(parseInt(m.createdAt, 10))
+                      .toLocaleDateString('en-GB', {
+                        weekday: 'long',
+                        day: 'numeric',
+                        month: 'long',
+                      })
+                      .replace(',', '')
+                      .trim()}
                     {new Date(parseInt(m.createdAt, 10))
                       .toTimeString()
                       .substring(0, 5)}
-                  </div>
+                  </>
                 </Comment.Metadata>
                 <Comment.Text>{m.text}</Comment.Text>
                 <Comment.Actions>
