@@ -20,8 +20,7 @@ const TeamListItem = styled.div`
   width: 50px;
   background-color: #676066;
   color: #fff;
-  margin: auto;
-  margin-bottom: 20px;
+  margin: auto auto 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -34,10 +33,19 @@ const TeamListItem = styled.div`
   }
 `;
 
-const team = ({ id, letter }) => <Link to={`/view-team/${id}`} key={`team-${id}`}><TeamListItem>{letter}</TeamListItem></Link>;
+const team = ({ id, letter }) => (
+  <Link to={`/view-team/${id}`} key={`team-${id}`}>
+    <TeamListItem>{letter}</TeamListItem>
+  </Link>
+);
 
 export default ({ teams }) => (
   <TeamWrapper>
-    <TeamList>{teams.map(team)}</TeamList>
+    <TeamList>
+      {teams.map(team)}
+      <Link to="/create-team">
+        <TeamListItem>+</TeamListItem>
+      </Link>
+    </TeamList>
   </TeamWrapper>
 );
