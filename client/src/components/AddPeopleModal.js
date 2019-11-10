@@ -64,7 +64,12 @@ export default compose(
     mapPropsToValues: () => ({ email: '' }),
     handleSubmit: async (
       values,
-      { props: { toggle, teamId, mutate }, setErrors, resetForm, setSubmitting },
+      {
+        props: { toggle, teamId, mutate },
+        setErrors,
+        resetForm,
+        setSubmitting,
+      },
     ) => {
       const {
         data: {
@@ -80,8 +85,18 @@ export default compose(
         toggle();
         resetForm();
       } else {
+        const filteredErrors = errors.reduce((acc, error) => {
+          if (error.message === 'user_id must be unique') {
+            acc.push({
+              path: 'email',
+              message: 'This user already a member of the team',
+            });
+            return acc;
+          }
+          return acc;
+        }, []);
         setSubmitting(false);
-        setErrors(normaliseErrors(errors));
+        setErrors(normaliseErrors(filteredErrors));
       }
     },
   }),

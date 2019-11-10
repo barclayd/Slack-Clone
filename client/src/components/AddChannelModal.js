@@ -4,6 +4,11 @@ import { withFormik } from 'formik';
 import { compose, graphql } from 'react-apollo';
 import { createChannelMutation, meQuery } from '../graphql/team';
 
+const closeAndReset = (e, close, reset) => {
+  close(e);
+  reset();
+};
+
 const AddChannelModal = ({
   open,
   toggle,
@@ -12,8 +17,13 @@ const AddChannelModal = ({
   isSubmitting,
   handleChange,
   handleSubmit,
+  resetForm,
 }) => (
-  <Modal open={open} closeIcon onClose={toggle}>
+  <Modal
+    open={open}
+    closeIcon
+    onClose={e => closeAndReset(e, toggle, resetForm)}
+  >
     <Modal.Header>Create a new Channel</Modal.Header>
     <Modal.Content>
       <Form>
@@ -29,7 +39,11 @@ const AddChannelModal = ({
           />
         </Form.Field>
         <Form.Group widths="equal">
-          <Form.Button fluid disabled={isSubmitting} onClick={toggle}>
+          <Form.Button
+            fluid
+            disabled={isSubmitting}
+            onClick={e => closeAndReset(e, toggle, resetForm)}
+          >
             Cancel
           </Form.Button>
           <Form.Button
@@ -77,12 +91,11 @@ export default compose(
           proxy,
           {
             data: {
-              // eslint-disable-next-line no-shadow
-              createChannel: { ok, channel },
+              createChannel: { ok: requestOk, channel },
             },
           },
         ) => {
-          if (ok) {
+          if (requestOk) {
             const data = proxy.readQuery({ query: meQuery });
             const currentTeam = data.me.teams.indexOf(
               data.me.teams.find(team => team.id === teamId),
