@@ -52,7 +52,7 @@ class Login extends Component {
     if (ok) {
       localStorage.setItem('token', token);
       localStorage.setItem('refreshToken', refreshToken);
-      history.push('/');
+      history.push('/view-team');
     } else {
       const validationErrors = {};
       errors.forEach(({ path, message }) => {

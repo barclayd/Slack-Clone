@@ -54,7 +54,7 @@ class Register extends Component {
     const { ok, errors } = response.data.register;
 
     if (ok) {
-      history.push('/');
+      history.push('/login');
     } else {
       const validationErrors = {};
       errors.forEach(({ path, message }) => {
